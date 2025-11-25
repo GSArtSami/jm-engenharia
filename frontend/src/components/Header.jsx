@@ -98,16 +98,29 @@ const Header = () => {
         {menuOpen && (
           <div className="md:hidden py-4 border-t">
             <nav className="flex flex-col gap-2">
-              <button
-                className="px-4 py-3 font-medium text-left transition-colors duration-200 hover:bg-gray-50 rounded-lg"
-                style={{ color: '#00537C' }}
-                onClick={() => {
-                  navigate('/imoveis/sp');
-                  setMenuOpen(false);
-                }}
-              >
-                Imóveis
-              </button>
+              <div className="px-4 py-2">
+                <p className="text-xs font-semibold text-gray-500 mb-2">IMÓVEIS</p>
+                <button
+                  className="w-full px-4 py-2 font-medium text-left transition-colors duration-200 hover:bg-gray-50 rounded-lg"
+                  style={{ color: '#00537C' }}
+                  onClick={() => {
+                    navigate('/imoveis/sp');
+                    setMenuOpen(false);
+                  }}
+                >
+                  São Paulo
+                </button>
+                <button
+                  className="w-full px-4 py-2 font-medium text-left transition-colors duration-200 hover:bg-gray-50 rounded-lg"
+                  style={{ color: '#00537C' }}
+                  onClick={() => {
+                    navigate('/imoveis/rj');
+                    setMenuOpen(false);
+                  }}
+                >
+                  Rio de Janeiro
+                </button>
+              </div>
               <a
                 href="#simulacao"
                 className="px-4 py-3 font-medium transition-colors duration-200 hover:bg-gray-50 rounded-lg"
