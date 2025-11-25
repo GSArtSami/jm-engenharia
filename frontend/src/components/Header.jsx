@@ -37,13 +37,31 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
-            <button
-              className="px-4 py-2 font-medium transition-colors duration-200 hover:bg-gray-50 rounded-lg"
-              style={{ color: '#00537C' }}
-              onClick={() => navigate('/imoveis/sp')}
-            >
-              Imóveis
-            </button>
+            <div className="relative group">
+              <button
+                className="px-4 py-2 font-medium transition-colors duration-200 hover:bg-gray-50 rounded-lg flex items-center gap-2"
+                style={{ color: '#00537C' }}
+              >
+                Imóveis
+                <ChevronDown size={16} />
+              </button>
+              <div className="absolute top-full left-0 mt-1 bg-white shadow-lg rounded-lg py-2 min-w-[180px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <button
+                  onClick={() => navigate('/imoveis/sp')}
+                  className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors"
+                  style={{ color: '#2c3e50' }}
+                >
+                  São Paulo
+                </button>
+                <button
+                  onClick={() => navigate('/imoveis/rj')}
+                  className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors"
+                  style={{ color: '#2c3e50' }}
+                >
+                  Rio de Janeiro
+                </button>
+              </div>
+            </div>
             <a
               href="#simulacao"
               className="px-4 py-2 font-medium transition-colors duration-200 hover:bg-gray-50 rounded-lg"
