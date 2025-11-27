@@ -14,29 +14,11 @@ const RegionSelector = () => {
     <div className="min-h-screen flex flex-col items-center justify-center" style={{ backgroundColor: '#E8EDF1' }}>
       {/* Logo */}
       <div className="mb-12">
-        <div className="flex items-center gap-2">
-          <div className="relative">
-            {/* Building icon/logo */}
-            <div className="flex flex-col gap-0.5">
-              <div className="flex gap-0.5">
-                <div className="w-1.5 h-2" style={{ backgroundColor: '#00537C' }}></div>
-                <div className="w-1.5 h-2" style={{ backgroundColor: '#00537C' }}></div>
-                <div className="w-1.5 h-2" style={{ backgroundColor: '#00537C' }}></div>
-              </div>
-              <div className="flex gap-0.5">
-                <div className="w-1.5 h-2" style={{ backgroundColor: '#00537C' }}></div>
-                <div className="w-1.5 h-2" style={{ backgroundColor: '#00537C' }}></div>
-                <div className="w-1.5 h-2" style={{ backgroundColor: '#00537C' }}></div>
-              </div>
-              <div className="flex gap-0.5">
-                <div className="w-1.5 h-3" style={{ backgroundColor: '#00537C' }}></div>
-                <div className="w-1.5 h-3" style={{ backgroundColor: '#00537C' }}></div>
-                <div className="w-1.5 h-3" style={{ backgroundColor: '#00537C' }}></div>
-              </div>
-            </div>
-          </div>
-          <h1 className="text-5xl font-bold" style={{ color: '#00537C' }}>CURY</h1>
-        </div>
+        <img 
+          src="/logo.jpg" 
+          alt="Cury Logo" 
+          className="h-24 w-auto object-contain mx-auto"
+        />
       </div>
 
       {/* Welcome Text */}
