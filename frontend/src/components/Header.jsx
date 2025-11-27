@@ -15,24 +15,11 @@ const Header = () => {
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => navigate('/')}
           >
-            <div className="flex flex-col gap-0.5">
-              <div className="flex gap-0.5">
-                <div className="w-1 h-1.5" style={{ backgroundColor: '#00537C' }}></div>
-                <div className="w-1 h-1.5" style={{ backgroundColor: '#00537C' }}></div>
-                <div className="w-1 h-1.5" style={{ backgroundColor: '#00537C' }}></div>
-              </div>
-              <div className="flex gap-0.5">
-                <div className="w-1 h-1.5" style={{ backgroundColor: '#00537C' }}></div>
-                <div className="w-1 h-1.5" style={{ backgroundColor: '#00537C' }}></div>
-                <div className="w-1 h-1.5" style={{ backgroundColor: '#00537C' }}></div>
-              </div>
-              <div className="flex gap-0.5">
-                <div className="w-1 h-2" style={{ backgroundColor: '#00537C' }}></div>
-                <div className="w-1 h-2" style={{ backgroundColor: '#00537C' }}></div>
-                <div className="w-1 h-2" style={{ backgroundColor: '#00537C' }}></div>
-              </div>
-            </div>
-            <span className="text-2xl font-bold" style={{ color: '#00537C' }}>CURY</span>
+            <img 
+              src="/logo.jpg" 
+              alt="Cury Logo" 
+              className="h-8 w-auto object-contain"
+            />
           </div>
 
           {/* Desktop Navigation */}
