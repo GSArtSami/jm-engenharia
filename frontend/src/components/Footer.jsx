@@ -8,25 +8,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Description */}
           <div className="col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="flex flex-col gap-0.5">
-                <div className="flex gap-0.5">
-                  <div className="w-1 h-1.5" style={{ backgroundColor: '#00537C' }}></div>
-                  <div className="w-1 h-1.5" style={{ backgroundColor: '#00537C' }}></div>
-                  <div className="w-1 h-1.5" style={{ backgroundColor: '#00537C' }}></div>
-                </div>
-                <div className="flex gap-0.5">
-                  <div className="w-1 h-1.5" style={{ backgroundColor: '#00537C' }}></div>
-                  <div className="w-1 h-1.5" style={{ backgroundColor: '#00537C' }}></div>
-                  <div className="w-1 h-1.5" style={{ backgroundColor: '#00537C' }}></div>
-                </div>
-                <div className="flex gap-0.5">
-                  <div className="w-1 h-2" style={{ backgroundColor: '#00537C' }}></div>
-                  <div className="w-1 h-2" style={{ backgroundColor: '#00537C' }}></div>
-                  <div className="w-1 h-2" style={{ backgroundColor: '#00537C' }}></div>
-                </div>
-              </div>
-              <span className="text-2xl font-bold" style={{ color: '#00537C' }}>CURY</span>
+            <div className="mb-4">
+              <img 
+                src="/logo.jpg" 
+                alt="Cury Logo" 
+                className="h-12 w-auto object-contain"
+              />
             </div>
             <p className="text-gray-600 text-sm leading-relaxed">
               Uma das maiores construtoras do país. Há 59 anos comprometidos na realização de grandes conquistas.
