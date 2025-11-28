@@ -20,33 +20,6 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Institucional */}
-          <div>
-            <h3 className="font-bold mb-4" style={{ color: '#00537C' }}>Institucional</h3>
-            <ul className="space-y-2">
-              <li>
-                <a href="#" className="text-gray-600 hover:text-[#00537C] transition-colors text-sm">
-                  Conheça a Cury
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-600 hover:text-[#00537C] transition-colors text-sm">
-                  TV Cury
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-600 hover:text-[#00537C] transition-colors text-sm">
-                  Relações com Investidores
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-gray-600 hover:text-[#00537C] transition-colors text-sm">
-                  Trabalhe conosco
-                </a>
-              </li>
-            </ul>
-          </div>
-
           {/* Serviços */}
           <div>
             <h3 className="font-bold mb-4" style={{ color: '#00537C' }}>Serviços</h3>
