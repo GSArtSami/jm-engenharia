@@ -93,7 +93,7 @@ const Header = () => {
                 style={{ color: '#00537C' }}
                 onClick={() => setMenuOpen(false)}
               >
-                Sobre a Cury
+                Sobre JM Engenharia
               </a>
               <button
                 className="mx-4 mt-2 px-6 py-3 text-white font-medium rounded-lg transition-all duration-200"
