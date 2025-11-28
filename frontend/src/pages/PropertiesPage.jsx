@@ -41,7 +41,7 @@ const PropertiesPage = () => {
   );
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#f8f8f8' }}>
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#e0e0e0' }}>
       <Header />
 
       {/* Search Section */}
