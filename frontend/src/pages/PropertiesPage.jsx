@@ -1,29 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import PropertyCard from '../components/PropertyCard';
-import { properties, zones, bedroomOptions } from '../mockData';
+import { properties, bedroomOptions } from '../mockData';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Search } from 'lucide-react';
 import { Button } from '../components/ui/button';
 
 const PropertiesPage = () => {
-  const { region } = useParams();
   const [filteredProperties, setFilteredProperties] = useState([]);
-  const [selectedZone, setSelectedZone] = useState('all');
   const [selectedBedrooms, setSelectedBedrooms] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const propertiesPerPage = 12;
 
   useEffect(() => {
-    let filtered = properties.filter((prop) => prop.region === region);
+    let filtered = properties;
 
-    if (selectedZone !== 'all') {
-      filtered = filtered.filter((prop) => prop.zone === selectedZone);
-    }
-
-    if (selectedBedrooms !== 'all') {
+    if (selectedBedrooms !== 'all' && selectedBedrooms !== 'studio') {
       filtered = filtered.filter(
         (prop) => prop.bedrooms.toString() === selectedBedrooms
       );
@@ -31,7 +24,7 @@ const PropertiesPage = () => {
 
     setFilteredProperties(filtered);
     setCurrentPage(1);
-  }, [region, selectedZone, selectedBedrooms]);
+  }, [selectedBedrooms]);
 
   // Pagination
   const indexOfLastProperty = currentPage * propertiesPerPage;
@@ -42,8 +35,13 @@ const PropertiesPage = () => {
   );
   const totalPages = Math.ceil(filteredProperties.length / propertiesPerPage);
 
+  // Filter bedroom options to only show 1, 2, 3
+  const bedroomFilterOptions = bedroomOptions.filter(opt => 
+    opt.id === 'all' || opt.id === '1' || opt.id === '2' || opt.id === '3'
+  );
+
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#f5f7f9' }}>
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#f8f8f8' }}>
       <Header />
 
       {/* Search Section */}
@@ -53,56 +51,19 @@ const PropertiesPage = () => {
             Encontre seu imóvel
           </h2>
           
-          <div className="max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Estado */}
-              <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: '#2c3e50' }}>
-                  Estado
-                </label>
-                <Select value={region} disabled>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Selecione o estado" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="sp">São Paulo</SelectItem>
-                    <SelectItem value="rj">Rio de Janeiro</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Região */}
-              <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: '#2c3e50' }}>
-                  Região
-                </label>
-                <Select value={selectedZone} onValueChange={setSelectedZone}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Selecione a região" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {zones
-                      .filter((zone) => zone.region === region)
-                      .map((zone) => (
-                        <SelectItem key={zone.id} value={zone.id}>
-                          {zone.name}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
+          <div className="max-w-2xl mx-auto">
+            <div className="flex flex-col md:flex-row gap-4">
               {/* Dormitórios */}
-              <div>
+              <div className="flex-1">
                 <label className="block text-sm font-medium mb-2" style={{ color: '#2c3e50' }}>
-                  Dormitórios
+                  Número de Dormitórios
                 </label>
                 <Select value={selectedBedrooms} onValueChange={setSelectedBedrooms}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Selecione" />
                   </SelectTrigger>
                   <SelectContent>
-                    {bedroomOptions.map((option) => (
+                    {bedroomFilterOptions.map((option) => (
                       <SelectItem key={option.id} value={option.id}>
                         {option.name}
                       </SelectItem>
@@ -110,16 +71,16 @@ const PropertiesPage = () => {
                   </SelectContent>
                 </Select>
               </div>
-            </div>
 
-            <div className="flex justify-center mt-6">
-              <Button
-                className="px-8 py-3 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg flex items-center gap-2"
-                style={{ backgroundColor: '#00537C' }}
-              >
-                <Search size={20} />
-                Buscar
-              </Button>
+              <div className="flex items-end">
+                <Button
+                  className="w-full md:w-auto px-8 py-3 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg flex items-center gap-2"
+                  style={{ backgroundColor: '#00537C' }}
+                >
+                  <Search size={20} />
+                  Buscar
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -128,7 +89,7 @@ const PropertiesPage = () => {
       {/* Properties Grid */}
       <div className="container mx-auto px-4 py-12 flex-grow">
         <h3 className="text-2xl font-bold mb-8" style={{ color: '#00537C' }}>
-          Destaques em {region === 'sp' ? 'São Paulo' : 'Rio de Janeiro'}
+          Casas Disponíveis
         </h3>
 
         {currentProperties.length > 0 ? (
@@ -202,26 +163,6 @@ const PropertiesPage = () => {
                 />
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Simulation Section */}
-      <div className="py-16" style={{ backgroundColor: '#E8EDF1' }} id="simulacao">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <h3 className="text-3xl font-bold mb-4" style={{ color: '#00537C' }}>
-              Faça uma simulação
-            </h3>
-            <p className="text-gray-700 mb-8">
-              Quer uma rápida previsão de como pagar seu imóvel? Faça uma simulação:
-            </p>
-            <Button
-              className="px-8 py-4 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-xl text-lg"
-              style={{ backgroundColor: '#00537C' }}
-            >
-              Iniciar simulação
-            </Button>
           </div>
         </div>
       </div>
