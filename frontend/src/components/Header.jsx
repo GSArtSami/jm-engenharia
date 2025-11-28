@@ -43,7 +43,7 @@ const Header = () => {
               className="px-4 py-2 font-medium transition-colors duration-200 hover:bg-gray-50 rounded-lg"
               style={{ color: '#00537C' }}
             >
-              Sobre a Cury
+              Sobre JM Engenharia
             </a>
             <button
               className="px-6 py-2 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg"
