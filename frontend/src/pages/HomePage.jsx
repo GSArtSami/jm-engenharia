@@ -52,7 +52,7 @@ const HomePage = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-5xl font-bold mb-6" style={{ color: '#00537C' }}>
-              Bem-vindo à Cury
+              Bem-vindo à JM Engenharia
             </h1>
             <p className="text-xl text-gray-700 mb-2">
               Escolha uma das opções abaixo para começar:
