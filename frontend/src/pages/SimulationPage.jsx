@@ -23,8 +23,9 @@ const SimulationPage = () => {
     { value: '3500', label: 'R$ 3.500' },
     { value: '4000', label: 'R$ 4.000' },
     { value: '4700', label: 'R$ 4.700' },
+    { value: '5500', label: 'R$ 5.500' },
     { value: '8600', label: 'R$ 8.600' },
-    { value: '10000', label: 'R$ 10.000+' }
+    { value: '12000', label: 'R$ 12.000' }
   ];
 
   const propertyOptions = [
@@ -32,6 +33,111 @@ const SimulationPage = () => {
     { value: '350000', label: 'R$ 350.000' },
     { value: '500000', label: 'R$ 500.000' }
   ];
+
+  // Dados reais de simulação para imóvel de R$ 210.000
+  const simulationData = {
+    '210000': {
+      '1500': {
+        juros: '4,85% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 131.243,97',
+        subsidio: 'R$ 13.090,00',
+        liberado: 'R$ 65.666,03',
+        sacPrimeira: 'R$ 450,00',
+        sacUltima: 'R$ 156,97',
+        pricePrimeira: 'R$ 354,74',
+        priceUltima: 'R$ 321,01'
+      },
+      '2160': {
+        juros: '4,85% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 107.186,00',
+        subsidio: 'R$ 6.313,00',
+        liberado: 'R$ 96.501,00',
+        sacPrimeira: 'R$ 647,99',
+        sacUltima: 'R$ 230,67',
+        pricePrimeira: 'R$ 508,00',
+        priceUltima: 'R$ 471,75'
+      },
+      '2850': {
+        juros: '5,12% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 83.279,90',
+        subsidio: 'R$ 2.028,00',
+        liberado: 'R$ 124.692,10',
+        sacPrimeira: 'R$ 855,00',
+        sacUltima: 'R$ 298,12',
+        pricePrimeira: 'R$ 667,88',
+        priceUltima: 'R$ 629,31'
+      },
+      '3500': {
+        juros: '5,64% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 68.555,16',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 141.444,84',
+        sacPrimeira: 'R$ 1.050,00',
+        sacUltima: 'R$ 363,32',
+        pricePrimeira: 'R$ 824,52',
+        priceUltima: 'R$ 784,58'
+      },
+      '4000': {
+        juros: '6,17% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 56.352,99',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 153.647,01',
+        sacPrimeira: 'R$ 1.200,00',
+        sacUltima: 'R$ 392,66',
+        pricePrimeira: 'R$ 942,02',
+        priceUltima: 'R$ 901,08'
+      },
+      '4700': {
+        juros: '7,23% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 46.473,70',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 163.526,30',
+        sacPrimeira: 'R$ 1.410,00',
+        sacUltima: 'R$ 416,62',
+        pricePrimeira: 'R$ 1.111,45',
+        priceUltima: 'R$ 1.069,70'
+      },
+      '5500': {
+        juros: '8,47% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 42.000,00',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 168.000,00',
+        sacPrimeira: 'R$ 1.609,51',
+        sacUltima: 'R$ 427,71',
+        pricePrimeira: 'R$ 1.279,93',
+        priceUltima: 'R$ 1.237,81'
+      },
+      '8600': {
+        juros: '8,47% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 42.000,00',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 168.000,00',
+        sacPrimeira: 'R$ 1.609,51',
+        sacUltima: 'R$ 427,71',
+        pricePrimeira: 'R$ 1.279,93',
+        priceUltima: 'R$ 1.237,81'
+      },
+      '12000': {
+        juros: '10,47% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 42.000,00',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 168.000,00',
+        sacPrimeira: 'R$ 1.867,11',
+        sacUltima: 'R$ 428,32',
+        pricePrimeira: 'R$ 1.511,37',
+        priceUltima: 'R$ 1.469,25'
+      }
+    }
+  };
 
   const validateForm = () => {
     const newErrors = {};
