@@ -307,34 +307,95 @@ const SimulationPage = () => {
               </Button>
 
               {result && (
-                <div className="mt-8 p-6 bg-gray-50 rounded-lg space-y-4">
-                  <h3 className="text-xl font-bold mb-4" style={{ color: '#00537C' }}>
+                <div className="mt-8 p-6 bg-gray-50 rounded-lg space-y-6">
+                  <h3 className="text-2xl font-bold mb-4" style={{ color: '#00537C' }}>
                     Resultado da Simulação
                   </h3>
                   <p className="text-gray-700 mb-4">
-                    Olá <span className="font-semibold">{result.name}</span>, veja a simulação do seu financiamento:
+                    Olá <span className="font-semibold">{result.name}</span>, veja a simulação do seu financiamento para imóvel de <span className="font-semibold">{result.propertyValue}</span>:
                   </p>
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-gray-700">Entrada Sugerida (20%):</span>
-                      <span className="font-bold" style={{ color: '#00537C' }}>{result.downPayment}</span>
+                  
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      <h4 className="font-bold text-lg mb-3" style={{ color: '#00537C' }}>
+                        Informações Gerais
+                      </h4>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-gray-700">Taxa de Juros:</span>
+                          <span className="font-bold">{result.juros}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-700">Cota Máxima:</span>
+                          <span className="font-bold">{result.cotaMaxima}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-700">Prazo:</span>
+                          <span className="font-bold">420 meses</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-700">Valor de Entrada:</span>
+                          <span className="font-bold text-lg" style={{ color: '#00537C' }}>{result.entrada}</span>
+                        </div>
+                        {result.subsidio !== 'R$ 0,00' && (
+                          <div className="flex justify-between bg-green-50 p-2 rounded">
+                            <span className="text-gray-700">Subsídio MCMV:</span>
+                            <span className="font-bold text-green-600">{result.subsidio}</span>
+                          </div>
+                        )}
+                        <div className="flex justify-between">
+                          <span className="text-gray-700">Valor Liberado:</span>
+                          <span className="font-bold text-xl" style={{ color: '#00537C' }}>{result.liberado}</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-700">Valor Financiado:</span>
-                      <span className="font-bold" style={{ color: '#00537C' }}>{result.financed}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-700">Parcela Mensal (30 anos):</span>
-                      <span className="font-bold text-2xl" style={{ color: '#00537C' }}>{result.monthly}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-700">Total a Pagar:</span>
-                      <span className="font-bold" style={{ color: '#00537C' }}>{result.total}</span>
+
+                    <div className="space-y-3">
+                      <h4 className="font-bold text-lg mb-3" style={{ color: '#00537C' }}>
+                        Parcelas
+                      </h4>
+                      
+                      <div className="bg-white p-4 rounded-lg border-2" style={{ borderColor: '#00537C' }}>
+                        <p className="font-bold mb-2" style={{ color: '#00537C' }}>Sistema SAC/TR</p>
+                        <div className="space-y-1 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-gray-700">1ª Parcela:</span>
+                            <span className="font-bold">{result.sacPrimeira}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-700">Última Parcela:</span>
+                            <span className="font-bold">{result.sacUltima}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-white p-4 rounded-lg border-2 border-gray-300">
+                        <p className="font-bold mb-2 text-gray-700">Sistema PRICE/TR</p>
+                        <div className="space-y-1 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-gray-700">1ª Parcela:</span>
+                            <span className="font-bold">{result.pricePrimeira}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-700">Última Parcela:</span>
+                            <span className="font-bold">{result.priceUltima}</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-600 mt-4">
-                    * Esta é uma simulação. Os valores podem variar de acordo com a análise de crédito.
-                  </p>
+
+                  <div className="border-t pt-4 mt-4">
+                    <p className="text-sm text-gray-600">
+                      * Esta é uma simulação. Os valores podem variar de acordo com a análise de crédito e condições do financiamento.
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      * SAC (Sistema de Amortização Constante): parcelas decrescentes ao longo do tempo.
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      * PRICE: parcelas fixas durante todo o período.
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
