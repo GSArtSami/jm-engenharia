@@ -8,27 +8,90 @@ import { Label } from '../components/ui/label';
 import { Calculator } from 'lucide-react';
 
 const SimulationPage = () => {
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [income, setIncome] = useState('');
   const [propertyValue, setPropertyValue] = useState('');
-  const [downPayment, setDownPayment] = useState('');
-  const [months, setMonths] = useState('360');
   const [result, setResult] = useState(null);
+  const [errors, setErrors] = useState({});
+
+  const incomeOptions = [
+    { value: '1500', label: 'R$ 1.500' },
+    { value: '2160', label: 'R$ 2.160' },
+    { value: '2850', label: 'R$ 2.850' },
+    { value: '3500', label: 'R$ 3.500' },
+    { value: '4000', label: 'R$ 4.000' },
+    { value: '4700', label: 'R$ 4.700' },
+    { value: '8600', label: 'R$ 8.600' },
+    { value: '10000', label: 'R$ 10.000+' }
+  ];
+
+  const propertyOptions = [
+    { value: '210000', label: 'R$ 210.000' },
+    { value: '350000', label: 'R$ 350.000' },
+    { value: '500000', label: 'R$ 500.000' }
+  ];
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!name.trim()) {
+      newErrors.name = 'Nome é obrigatório';
+    }
+    
+    if (!phone.trim()) {
+      newErrors.phone = 'Celular é obrigatório';
+    } else if (!/^\d{10,11}$/.test(phone.replace(/\D/g, ''))) {
+      newErrors.phone = 'Celular inválido';
+    }
+    
+    if (!income) {
+      newErrors.income = 'Selecione a renda familiar';
+    }
+    
+    if (!propertyValue) {
+      newErrors.propertyValue = 'Selecione o valor do imóvel';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const calculateSimulation = () => {
-    const value = parseFloat(propertyValue);
-    const down = parseFloat(downPayment);
-    const period = parseInt(months);
-
-    if (value && down >= 0 && period) {
-      const financed = value - down;
-      const interestRate = 0.009; // 0.9% ao mês
-      const monthlyPayment = financed * (interestRate * Math.pow(1 + interestRate, period)) / (Math.pow(1 + interestRate, period) - 1);
-      
-      setResult({
-        financed: financed.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-        monthly: monthlyPayment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-        total: (monthlyPayment * period).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-      });
+    if (!validateForm()) {
+      return;
     }
+
+    const value = parseFloat(propertyValue);
+    const incomeValue = parseFloat(income);
+    const period = 360; // 30 anos
+    const interestRate = 0.009; // 0.9% ao mês
+    
+    // Calcular entrada sugerida (20% do valor do imóvel)
+    const downPayment = value * 0.2;
+    const financed = value - downPayment;
+    const monthlyPayment = financed * (interestRate * Math.pow(1 + interestRate, period)) / (Math.pow(1 + interestRate, period) - 1);
+    
+    setResult({
+      name: name,
+      financed: financed.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+      downPayment: downPayment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+      monthly: monthlyPayment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+      total: (monthlyPayment * period).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+    });
+  };
+
+  const formatPhone = (value) => {
+    const cleaned = value.replace(/\D/g, '');
+    if (cleaned.length <= 10) {
+      return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+    }
+    return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+  };
+
+  const handlePhoneChange = (e) => {
+    const formatted = formatPhone(e.target.value);
+    setPhone(formatted);
   };
 
   return (
