@@ -117,46 +117,85 @@ const SimulationPage = () => {
 
           <Card className="p-8 bg-white">
             <div className="space-y-6">
+              {/* Nome */}
+              <div>
+                <Label htmlFor="name" className="text-gray-700 font-medium mb-2 block">
+                  Nome Completo <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Digite seu nome completo"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className={`text-lg ${errors.name ? 'border-red-500' : ''}`}
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                )}
+              </div>
+
+              {/* Celular */}
+              <div>
+                <Label htmlFor="phone" className="text-gray-700 font-medium mb-2 block">
+                  Celular <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="(00) 00000-0000"
+                  value={phone}
+                  onChange={handlePhoneChange}
+                  maxLength={15}
+                  className={`text-lg ${errors.phone ? 'border-red-500' : ''}`}
+                />
+                {errors.phone && (
+                  <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+                )}
+              </div>
+
+              {/* Renda Familiar Média */}
+              <div>
+                <Label htmlFor="income" className="text-gray-700 font-medium mb-2 block">
+                  Renda Familiar Média <span className="text-red-500">*</span>
+                </Label>
+                <Select value={income} onValueChange={setIncome}>
+                  <SelectTrigger className={`w-full text-lg ${errors.income ? 'border-red-500' : ''}`}>
+                    <SelectValue placeholder="Selecione a renda familiar" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {incomeOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {errors.income && (
+                  <p className="text-red-500 text-sm mt-1">{errors.income}</p>
+                )}
+              </div>
+
+              {/* Valor do Imóvel */}
               <div>
                 <Label htmlFor="propertyValue" className="text-gray-700 font-medium mb-2 block">
-                  Valor do Imóvel
+                  Valor do Imóvel <span className="text-red-500">*</span>
                 </Label>
-                <Input
-                  id="propertyValue"
-                  type="number"
-                  placeholder="R$ 300.000"
-                  value={propertyValue}
-                  onChange={(e) => setPropertyValue(e.target.value)}
-                  className="text-lg"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="downPayment" className="text-gray-700 font-medium mb-2 block">
-                  Entrada (R$)
-                </Label>
-                <Input
-                  id="downPayment"
-                  type="number"
-                  placeholder="R$ 60.000"
-                  value={downPayment}
-                  onChange={(e) => setDownPayment(e.target.value)}
-                  className="text-lg"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="months" className="text-gray-700 font-medium mb-2 block">
-                  Prazo (meses)
-                </Label>
-                <Input
-                  id="months"
-                  type="number"
-                  placeholder="360"
-                  value={months}
-                  onChange={(e) => setMonths(e.target.value)}
-                  className="text-lg"
-                />
+                <Select value={propertyValue} onValueChange={setPropertyValue}>
+                  <SelectTrigger className={`w-full text-lg ${errors.propertyValue ? 'border-red-500' : ''}`}>
+                    <SelectValue placeholder="Selecione o valor do imóvel" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {propertyOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {errors.propertyValue && (
+                  <p className="text-red-500 text-sm mt-1">{errors.propertyValue}</p>
+                )}
               </div>
 
               <Button
@@ -164,7 +203,7 @@ const SimulationPage = () => {
                 className="w-full py-6 text-white font-medium text-lg rounded-lg transition-all duration-200 hover:shadow-lg"
                 style={{ backgroundColor: '#00537C' }}
               >
-                Calcular
+                Calcular Simulação
               </Button>
 
               {result && (
@@ -172,13 +211,20 @@ const SimulationPage = () => {
                   <h3 className="text-xl font-bold mb-4" style={{ color: '#00537C' }}>
                     Resultado da Simulação
                   </h3>
+                  <p className="text-gray-700 mb-4">
+                    Olá <span className="font-semibold">{result.name}</span>, veja a simulação do seu financiamento:
+                  </p>
                   <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-gray-700">Entrada Sugerida (20%):</span>
+                      <span className="font-bold" style={{ color: '#00537C' }}>{result.downPayment}</span>
+                    </div>
                     <div className="flex justify-between">
                       <span className="text-gray-700">Valor Financiado:</span>
                       <span className="font-bold" style={{ color: '#00537C' }}>{result.financed}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-700">Parcela Mensal:</span>
+                      <span className="text-gray-700">Parcela Mensal (30 anos):</span>
                       <span className="font-bold text-2xl" style={{ color: '#00537C' }}>{result.monthly}</span>
                     </div>
                     <div className="flex justify-between">
@@ -186,6 +232,9 @@ const SimulationPage = () => {
                       <span className="font-bold" style={{ color: '#00537C' }}>{result.total}</span>
                     </div>
                   </div>
+                  <p className="text-sm text-gray-600 mt-4">
+                    * Esta é uma simulação. Os valores podem variar de acordo com a análise de crédito.
+                  </p>
                 </div>
               )}
             </div>
