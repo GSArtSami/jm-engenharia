@@ -169,23 +169,16 @@ const SimulationPage = () => {
       return;
     }
 
-    const value = parseFloat(propertyValue);
-    const incomeValue = parseFloat(income);
-    const period = 360; // 30 anos
-    const interestRate = 0.009; // 0.9% ao mês
+    // Buscar dados da simulação
+    const simData = simulationData[propertyValue]?.[income];
     
-    // Calcular entrada sugerida (20% do valor do imóvel)
-    const downPayment = value * 0.2;
-    const financed = value - downPayment;
-    const monthlyPayment = financed * (interestRate * Math.pow(1 + interestRate, period)) / (Math.pow(1 + interestRate, period) - 1);
-    
-    setResult({
-      name: name,
-      financed: financed.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-      downPayment: downPayment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-      monthly: monthlyPayment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-      total: (monthlyPayment * period).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-    });
+    if (simData) {
+      setResult({
+        name: name,
+        propertyValue: propertyOptions.find(p => p.value === propertyValue)?.label,
+        ...simData
+      });
+    }
   };
 
   const formatPhone = (value) => {
