@@ -596,6 +596,8 @@ const SimulationPage = () => {
                       * PRICE: parcelas fixas durante todo o período.
                     </p>
                   </div>
+                  </>
+                  )}
                 </div>
               )}
             </div>
