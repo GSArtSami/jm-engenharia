@@ -345,6 +345,7 @@ const SimulationPage = () => {
       setResult({
         name: name,
         propertyValue: propertyOptions.find(p => p.value === propertyValue)?.label,
+        incomeLabel: incomeOptions.find(i => i.value === income)?.label,
         ...simData
       });
     }
