@@ -485,6 +485,27 @@ const SimulationPage = () => {
                     Olá <span className="font-semibold">{result.name}</span>, veja a simulação do seu financiamento para imóvel de <span className="font-semibold">{result.propertyValue}</span>:
                   </p>
                   
+                  {result.rendaInsuficiente ? (
+                    <div className="bg-red-50 border-2 border-red-300 rounded-lg p-6 text-center">
+                      <div className="text-6xl mb-4">⚠️</div>
+                      <h4 className="text-2xl font-bold text-red-600 mb-3">
+                        Renda Insuficiente
+                      </h4>
+                      <p className="text-gray-700 text-lg mb-4">
+                        Infelizmente, a renda de <span className="font-semibold">{result.incomeLabel}</span> não é suficiente para financiar um imóvel de <span className="font-semibold">{result.propertyValue}</span>.
+                      </p>
+                      <p className="text-gray-600">
+                        Sugerimos que você:
+                      </p>
+                      <ul className="text-left mt-3 space-y-2 text-gray-700 max-w-md mx-auto">
+                        <li>• Escolha um imóvel de menor valor</li>
+                        <li>• Aumente o valor da entrada</li>
+                        <li>• Considere adicionar um co-devedor ao financiamento</li>
+                      </ul>
+                    </div>
+                  ) : (
+                    <>
+                  
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-3">
                       <h4 className="font-bold text-lg mb-3" style={{ color: '#00537C' }}>
