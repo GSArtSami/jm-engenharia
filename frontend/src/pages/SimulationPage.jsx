@@ -136,6 +136,175 @@ const SimulationPage = () => {
         pricePrimeira: 'R$ 1.511,37',
         priceUltima: 'R$ 1.469,25'
       }
+    },
+    '350000': {
+      '1500': {
+        rendaInsuficiente: true
+      },
+      '2160': {
+        juros: '8,47% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 287.842,70',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 62.157,30',
+        sacPrimeira: 'R$ 647,99',
+        sacUltima: 'R$ 174,01',
+        pricePrimeira: 'R$ 526,05',
+        priceUltima: 'R$ 473,72'
+      },
+      '2850': {
+        juros: '8,47% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 265.495,61',
+        subsidio: 'R$ 2.028,00',
+        liberado: 'R$ 84.504,39',
+        sacPrimeira: 'R$ 855,00',
+        sacUltima: 'R$ 222,58',
+        pricePrimeira: 'R$ 689,22',
+        priceUltima: 'R$ 635,05'
+      },
+      '3500': {
+        juros: '8,47% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 244.444,00',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 105.556,00',
+        sacPrimeira: 'R$ 1.049,99',
+        sacUltima: 'R$ 278,03',
+        pricePrimeira: 'R$ 842,91',
+        priceUltima: 'R$ 787,02'
+      },
+      '4000': {
+        juros: '8,47% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 228.250,45',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 121.749,55',
+        sacPrimeira: 'R$ 1.200,00',
+        sacUltima: 'R$ 316,85',
+        pricePrimeira: 'R$ 961,14',
+        priceUltima: 'R$ 903,92'
+      },
+      '4700': {
+        juros: '8,47% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 205.579,49',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 144.420,51',
+        sacPrimeira: 'R$ 1.410,00',
+        sacUltima: 'R$ 371,20',
+        pricePrimeira: 'R$ 1.126,67',
+        priceUltima: 'R$ 1.067,59'
+      },
+      '5500': {
+        juros: '8,47% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 179.669,82',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 170.330,18',
+        sacPrimeira: 'R$ 1.649,99',
+        sacUltima: 'R$ 433,31',
+        pricePrimeira: 'R$ 1.315,83',
+        priceUltima: 'R$ 1.254,63'
+      },
+      '8600': {
+        juros: '8,47% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 79.269,84',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 270.730,16',
+        sacPrimeira: 'R$ 2.580,00',
+        sacUltima: 'R$ 673,98',
+        pricePrimeira: 'R$ 2.048,87',
+        priceUltima: 'R$ 1.979,43'
+      },
+      '12000': {
+        juros: '10,47% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 70.000,00',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 280.000,00',
+        sacPrimeira: 'R$ 3.095,19',
+        sacUltima: 'R$ 697,22',
+        pricePrimeira: 'R$ 2.502,28',
+        priceUltima: 'R$ 2.432,08'
+      }
+    },
+    '500000': {
+      '1500': {
+        rendaInsuficiente: true
+      },
+      '2160': {
+        rendaInsuficiente: true
+      },
+      '2850': {
+        rendaInsuficiente: true
+      },
+      '3500': {
+        juros: '10,47% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 389.670,37',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 110.329,93',
+        sacInsuficiente: true,
+        pricePrimeira: 'R$ 1.050,00',
+        priceUltima: 'R$ 973,47'
+      },
+      '4000': {
+        juros: '10,47% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 397.416,52',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 102.583,48',
+        sacPrimeira: 'R$ 1.200,00',
+        sacUltima: 'R$ 271,28',
+        pricePrimeira: 'R$ 982,77',
+        priceUltima: 'R$ 906,88'
+      },
+      '4700': {
+        juros: '10,47% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 348.189,60',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 151.810,40',
+        sacPrimeira: 'R$ 1.410,00',
+        sacUltima: 'R$ 317,98',
+        pricePrimeira: 'R$ 1.151,59',
+        priceUltima: 'R$ 1.074,10'
+      },
+      '5500': {
+        juros: '10,47% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 320.535,75',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 179.464,25',
+        sacPrimeira: 'R$ 1.650,00',
+        sacUltima: 'R$ 371,35',
+        pricePrimeira: 'R$ 1.650,00',
+        priceUltima: 'R$ 1.567,80'
+      },
+      '8600': {
+        juros: '10,47% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 269.594,72',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 230.405,28',
+        sacPrimeira: 'R$ 2.580,00',
+        sacUltima: 'R$ 578,15',
+        pricePrimeira: 'R$ 2.580,00',
+        priceUltima: 'R$ 2.489,02'
+      },
+      '12000': {
+        juros: '10,47% a.a',
+        cotaMaxima: '80%',
+        entrada: 'R$ 100.000,00',
+        subsidio: 'R$ 0,00',
+        liberado: 'R$ 400.000,00',
+        sacPrimeira: 'R$ 3.600,00',
+        sacUltima: 'R$ 804,98',
+        pricePrimeira: 'R$ 3.563,97',
+        priceUltima: 'R$ 3.463,69'
+      }
     }
   };
 
