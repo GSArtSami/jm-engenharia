@@ -546,19 +546,28 @@ const SimulationPage = () => {
                         Parcelas
                       </h4>
                       
-                      <div className="bg-white p-4 rounded-lg border-2" style={{ borderColor: '#00537C' }}>
-                        <p className="font-bold mb-2" style={{ color: '#00537C' }}>Sistema SAC/TR</p>
-                        <div className="space-y-1 text-sm">
-                          <div className="flex justify-between">
-                            <span className="text-gray-700">1ª Parcela:</span>
-                            <span className="font-bold">{result.sacPrimeira}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-700">Última Parcela:</span>
-                            <span className="font-bold">{result.sacUltima}</span>
+                      {result.sacInsuficiente ? (
+                        <div className="bg-yellow-50 p-4 rounded-lg border-2 border-yellow-400">
+                          <p className="font-bold mb-2 text-yellow-700">Sistema SAC/TR</p>
+                          <p className="text-sm text-gray-700">
+                            Renda insuficiente para esse tipo de parcela
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="bg-white p-4 rounded-lg border-2" style={{ borderColor: '#00537C' }}>
+                          <p className="font-bold mb-2" style={{ color: '#00537C' }}>Sistema SAC/TR</p>
+                          <div className="space-y-1 text-sm">
+                            <div className="flex justify-between">
+                              <span className="text-gray-700">1ª Parcela:</span>
+                              <span className="font-bold">{result.sacPrimeira}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-700">Última Parcela:</span>
+                              <span className="font-bold">{result.sacUltima}</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      )}
 
                       <div className="bg-white p-4 rounded-lg border-2 border-gray-300">
                         <p className="font-bold mb-2 text-gray-700">Sistema PRICE/TR</p>
