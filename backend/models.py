@@ -1,0 +1,68 @@
+from pydantic import BaseModel, Field
+from typing import List, Optional
+from datetime import datetime
+
+class Amenity(BaseModel):
+    name: str
+    icon: str
+
+class Property(BaseModel):
+    id: Optional[str] = None
+    name: str
+    location: str
+    description: str
+    bedrooms: int
+    badge: str = "Lançamento"
+    image: str
+    amenities: List[Amenity]
+    propertyValue: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class PropertyCreate(BaseModel):
+    name: str
+    location: str
+    description: str
+    bedrooms: int
+    badge: str = "Lançamento"
+    image: str
+    amenities: List[Amenity]
+    propertyValue: str
+
+class Land(BaseModel):
+    id: Optional[str] = None
+    name: str
+    location: str
+    description: str
+    image: str
+    area: str
+    price: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class LandCreate(BaseModel):
+    name: str
+    location: str
+    description: str
+    image: str
+    area: str
+    price: str
+
+class Construction(BaseModel):
+    id: Optional[str] = None
+    name: str
+    location: str
+    description: str
+    image: str
+    price: str
+    features: List[str]
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class ConstructionCreate(BaseModel):
+    name: str
+    location: str
+    description: str
+    image: str
+    price: str
+    features: List[str]
+
+class AdminLogin(BaseModel):
+    password: str
