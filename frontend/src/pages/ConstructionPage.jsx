@@ -37,6 +37,7 @@ const ConstructionPage = () => {
       </div>
 
       <Footer />
+      <SimulationButton />
     </div>
   );
 };
