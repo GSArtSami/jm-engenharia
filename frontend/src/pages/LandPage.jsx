@@ -37,6 +37,7 @@ const LandPage = () => {
       </div>
 
       <Footer />
+      <SimulationButton />
     </div>
   );
 };
