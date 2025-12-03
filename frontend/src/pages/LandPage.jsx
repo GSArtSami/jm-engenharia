@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import SimulationButton from '../components/SimulationButton';
 import { MapPin } from 'lucide-react';
 
 const LandPage = () => {
