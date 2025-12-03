@@ -169,6 +169,7 @@ const PropertiesPage = () => {
       </div>
 
       <Footer />
+      <SimulationButton />
     </div>
   );
 };
