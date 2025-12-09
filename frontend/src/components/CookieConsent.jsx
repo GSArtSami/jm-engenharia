@@ -3,8 +3,10 @@ import { X } from 'lucide-react';
 
 const CookieConsent = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const consent = localStorage.getItem('cookieConsent');
     if (!consent) {
       setIsVisible(true);
@@ -16,7 +18,7 @@ const CookieConsent = () => {
     setIsVisible(false);
   };
 
-  if (!isVisible) return null;
+  if (!mounted || !isVisible) return null;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t shadow-2xl">
