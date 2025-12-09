@@ -5,10 +5,12 @@ from datetime import datetime
 
 router = APIRouter(tags=["public"])
 
+# Global db variable to be set by server
+db_instance = None
+
 # Dependency to get database
 def get_db():
-    from server import db
-    return db
+    return db_instance
 
 @router.post("/track-visit")
 async def track_page_visit(
