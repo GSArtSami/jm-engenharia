@@ -1,12 +1,18 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Body
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from models import Property, PropertyCreate, Land, LandCreate, Construction, ConstructionCreate, AdminLogin
 from typing import List
 import os
 import jwt
 from datetime import datetime, timedelta
+from bson import ObjectId
 
 router = APIRouter(prefix="/admin", tags=["admin"])
+
+# Dependency to get database - will be injected from main server
+def get_db():
+    from server import db
+    return db
 
 # Admin password
 ADMIN_PASSWORD = "JM@engcivil"
