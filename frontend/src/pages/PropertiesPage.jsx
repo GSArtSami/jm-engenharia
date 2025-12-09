@@ -4,6 +4,7 @@ import Footer from '../components/Footer';
 import PropertyCard from '../components/PropertyCard';
 import SimulationButton from '../components/SimulationButton';
 import WhatsAppButton from '../components/WhatsAppButton';
+import ScheduleMeetingButton from '../components/ScheduleMeetingButton';
 import { properties, bedroomOptions } from '../mockData';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Search } from 'lucide-react';
