@@ -16,7 +16,7 @@ const Footer = () => {
               />
             </div>
             <p className="text-gray-600 text-sm leading-relaxed">
-              Uma das maiores construtoras do país. Há 59 anos comprometidos na realização de grandes conquistas.
+              JM Engenharia - Construindo seus sonhos com qualidade e excelência.
             </p>
           </div>
 
