@@ -140,15 +140,15 @@ const PropertiesPage = () => {
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <h3 className="text-3xl font-bold mb-6" style={{ color: '#00537C' }}>
-                  Imóveis com a qualidade Cury
+                  Imóveis com a qualidade JM Engenharia
                 </h3>
                 <p className="text-gray-700 leading-relaxed mb-6">
-                  A Cury Construtora iniciou sua história em 7 de maio de 1963 e desde o início
-                  tem o objetivo de buscar sempre melhorias e inovações constantes.
+                  A JM Engenharia é uma empresa comprometida em realizar sonhos através de
+                  imóveis de qualidade e projetos personalizados.
                 </p>
                 <p className="text-gray-700 leading-relaxed mb-6">
-                  Com 59 anos de experiência, a Cury se consolidou como uma das maiores
-                  construtoras do país, comprometida na realização de grandes conquistas.
+                  Nossa missão é oferecer as melhores condições de financiamento e atendimento
+                  personalizado para cada cliente.
                 </p>
                 <Button
                   className="px-6 py-3 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg"
