@@ -610,6 +610,8 @@ const SimulationPage = () => {
 
       <Footer />
       <WhatsAppButton />
+      <SimulationButton />
+      <ScheduleMeetingButton />
     </div>
   );
 };
