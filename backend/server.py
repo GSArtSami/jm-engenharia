@@ -70,12 +70,14 @@ async def get_status_checks():
     
     return status_checks
 
-# Import admin routes
+# Import admin and public routes
 from admin_routes import router as admin_router
+from public_routes import router as public_router
 
 # Include the routers in the main app
 app.include_router(api_router)
 api_router.include_router(admin_router)
+api_router.include_router(public_router)
 
 app.add_middleware(
     CORSMiddleware,
