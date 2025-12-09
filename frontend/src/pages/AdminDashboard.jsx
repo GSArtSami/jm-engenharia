@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Card } from '../components/ui/card';
-import { Home, MapPin, LogOut } from 'lucide-react';
+import { Home, MapPin, LogOut, BarChart, Calendar } from 'lucide-react';
 import { Button } from '../components/ui/button';
 
 const AdminDashboard = () => {
