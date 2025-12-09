@@ -171,6 +171,7 @@ const PropertiesPage = () => {
 
       <Footer />
       <SimulationButton />
+      <WhatsAppButton />
     </div>
   );
 };
