@@ -135,3 +135,120 @@ async def delete_construction(construction_id: str, db: AsyncIOMotorDatabase = D
     if result.deleted_count:
         return {"success": True}
     raise HTTPException(status_code=404, detail="Construção não encontrada")
+
+
+# Analytics routes
+@router.get("/analytics/visits")
+async def get_visit_analytics(period: str = "day", db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Get visit analytics grouped by day, week, or month"""
+    from datetime import datetime, timedelta
+    
+    now = datetime.utcnow()
+    
+    if period == "day":
+        start_date = now - timedelta(days=30)  # Last 30 days
+        group_format = "%Y-%m-%d"
+    elif period == "week":
+        start_date = now - timedelta(weeks=12)  # Last 12 weeks
+        group_format = "%Y-W%U"
+    elif period == "month":
+        start_date = now - timedelta(days=365)  # Last 12 months
+        group_format = "%Y-%m"
+    else:
+        start_date = now - timedelta(days=30)
+        group_format = "%Y-%m-%d"
+    
+    pipeline = [
+        {"$match": {"timestamp": {"$gte": start_date}}},
+        {
+            "$group": {
+                "_id": {
+                    "$dateToString": {"format": group_format, "date": "$timestamp"}
+                },
+                "count": {"$sum": 1},
+                "unique_ips": {"$addToSet": "$user_ip"}
+            }
+        },
+        {
+            "$project": {
+                "date": "$_id",
+                "total_visits": "$count",
+                "unique_visitors": {"$size": "$unique_ips"}
+            }
+        },
+        {"$sort": {"date": 1}}
+    ]
+    
+    results = await db.page_visits.aggregate(pipeline).to_list(1000)
+    return results
+
+@router.get("/analytics/summary")
+async def get_analytics_summary(db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Get overall analytics summary"""
+    from datetime import datetime, timedelta
+    
+    now = datetime.utcnow()
+    today_start = datetime(now.year, now.month, now.day)
+    week_start = now - timedelta(days=7)
+    month_start = now - timedelta(days=30)
+    
+    # Today's visits
+    today_visits = await db.page_visits.count_documents({"timestamp": {"$gte": today_start}})
+    
+    # This week's visits
+    week_visits = await db.page_visits.count_documents({"timestamp": {"$gte": week_start}})
+    
+    # This month's visits
+    month_visits = await db.page_visits.count_documents({"timestamp": {"$gte": month_start}})
+    
+    # Total visits
+    total_visits = await db.page_visits.count_documents({})
+    
+    # Unique visitors today
+    today_visitors = await db.page_visits.distinct("user_ip", {"timestamp": {"$gte": today_start}})
+    
+    return {
+        "today": today_visits,
+        "this_week": week_visits,
+        "this_month": month_visits,
+        "total": total_visits,
+        "unique_today": len(today_visitors)
+    }
+
+# Appointment routes
+@router.get("/appointments")
+async def get_all_appointments(status: str = None, db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Get all appointments, optionally filtered by status"""
+    query = {}
+    if status:
+        query["status"] = status
+    
+    appointments = await db.appointments.find(query).sort("created_at", -1).to_list(1000)
+    for appt in appointments:
+        appt["id"] = str(appt.pop("_id"))
+    return appointments
+
+@router.get("/appointments/pending/count")
+async def get_pending_appointments_count(db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Get count of pending appointments for notifications"""
+    count = await db.appointments.count_documents({"status": "pending"})
+    return {"count": count}
+
+@router.put("/appointments/{appointment_id}/status")
+async def update_appointment_status(
+    appointment_id: str, 
+    status: str = Body(..., embed=True),
+    db: AsyncIOMotorDatabase = Depends(get_db)
+):
+    """Update appointment status (confirm, cancel, etc.)"""
+    if status not in ["pending", "confirmed", "cancelled"]:
+        raise HTTPException(status_code=400, detail="Status inválido")
+    
+    result = await db.appointments.update_one(
+        {"_id": ObjectId(appointment_id)},
+        {"$set": {"status": status}}
+    )
+    
+    if result.modified_count:
+        return {"success": True}
+    raise HTTPException(status_code=404, detail="Agendamento não encontrado")
