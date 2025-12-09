@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import SimulationButton from '../components/SimulationButton';
+import WhatsAppButton from '../components/WhatsAppButton';
 import { Hammer } from 'lucide-react';
 
 const ConstructionPage = () => {
