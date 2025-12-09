@@ -39,6 +39,7 @@ const LandPage = () => {
 
       <Footer />
       <SimulationButton />
+      <WhatsAppButton />
     </div>
   );
 };
