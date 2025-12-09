@@ -66,3 +66,29 @@ class ConstructionCreate(BaseModel):
 
 class AdminLogin(BaseModel):
     password: str
+
+class PageVisit(BaseModel):
+    id: Optional[str] = None
+    page: str
+    user_ip: str
+    user_agent: str
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+
+class Appointment(BaseModel):
+    id: Optional[str] = None
+    name: str
+    email: str
+    phone: str
+    preferred_date: str
+    preferred_time: str
+    message: Optional[str] = None
+    status: str = "pending"  # pending, confirmed, cancelled
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class AppointmentCreate(BaseModel):
+    name: str
+    email: str
+    phone: str
+    preferred_date: str
+    preferred_time: str
+    message: Optional[str] = None
