@@ -73,21 +73,22 @@ async def delete_property(property_id: str, db: AsyncIOMotorDatabase = Depends(g
     raise HTTPException(status_code=404, detail="Imóvel não encontrado")
 
 # Land routes
-@router.get("/lands", response_model=List[Land])
-async def get_all_lands(db: AsyncIOMotorDatabase):
+@router.get("/lands")
+async def get_all_lands(db: AsyncIOMotorDatabase = Depends(get_db)):
     lands = await db.lands.find().to_list(1000)
+    for land in lands:
+        land["id"] = str(land.pop("_id"))
     return lands
 
 @router.post("/lands")
-async def create_land(land: LandCreate, db: AsyncIOMotorDatabase):
+async def create_land(land: LandCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
     land_dict = land.dict()
     result = await db.lands.insert_one(land_dict)
     land_dict["id"] = str(result.inserted_id)
     return {"success": True, "land": land_dict}
 
 @router.put("/lands/{land_id}")
-async def update_land(land_id: str, land: LandCreate, db: AsyncIOMotorDatabase):
-    from bson import ObjectId
+async def update_land(land_id: str, land: LandCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
     result = await db.lands.update_one(
         {"_id": ObjectId(land_id)},
         {"$set": land.dict()}
@@ -97,8 +98,7 @@ async def update_land(land_id: str, land: LandCreate, db: AsyncIOMotorDatabase):
     raise HTTPException(status_code=404, detail="Terreno não encontrado")
 
 @router.delete("/lands/{land_id}")
-async def delete_land(land_id: str, db: AsyncIOMotorDatabase):
-    from bson import ObjectId
+async def delete_land(land_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
     result = await db.lands.delete_one({"_id": ObjectId(land_id)})
     if result.deleted_count:
         return {"success": True}
