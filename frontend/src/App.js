@@ -9,8 +9,6 @@ import LandPage from './pages/LandPage';
 import ConstructionPage from './pages/ConstructionPage';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
-import AdminProperties from './pages/AdminProperties';
-import AdminAnalytics from './pages/AdminAnalytics';
 import CookieConsent from './components/CookieConsent';
 
 function App() {
@@ -26,8 +24,6 @@ function App() {
             <Route path="/construcao" element={<ConstructionPage />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/admin/properties" element={<AdminProperties />} />
-            <Route path="/admin/analytics" element={<AdminAnalytics />} />
           </Routes>
           <CookieConsent />
         </BrowserRouter>
