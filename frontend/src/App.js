@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ErrorBoundary from './components/ErrorBoundary';
 import HomePage from './pages/HomePage';
 import PropertiesPage from './pages/PropertiesPage';
 import SimulationPage from './pages/SimulationPage';
@@ -14,22 +15,24 @@ import CookieConsent from './components/CookieConsent';
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/imoveis" element={<PropertiesPage />} />
-          <Route path="/simulacao" element={<SimulationPage />} />
-          <Route path="/terrenos" element={<LandPage />} />
-          <Route path="/construcao" element={<ConstructionPage />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/properties" element={<AdminProperties />} />
-          <Route path="/admin/analytics" element={<AdminAnalytics />} />
-        </Routes>
-        <CookieConsent />
-      </BrowserRouter>
-    </div>
+    <ErrorBoundary>
+      <div className="App">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/imoveis" element={<PropertiesPage />} />
+            <Route path="/simulacao" element={<SimulationPage />} />
+            <Route path="/terrenos" element={<LandPage />} />
+            <Route path="/construcao" element={<ConstructionPage />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/properties" element={<AdminProperties />} />
+            <Route path="/admin/analytics" element={<AdminAnalytics />} />
+          </Routes>
+          <CookieConsent />
+        </BrowserRouter>
+      </div>
+    </ErrorBoundary>
   );
 }
 
