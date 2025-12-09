@@ -11,7 +11,7 @@ const WhatsAppButton = () => {
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-8 left-52 z-50 w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-2xl transition-all duration-300 hover:shadow-3xl hover:scale-110 flex items-center justify-center"
+      className="fixed bottom-24 left-8 z-50 w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-2xl transition-all duration-300 hover:shadow-3xl hover:scale-110 flex items-center justify-center"
       title="Fale conosco no WhatsApp"
     >
       <MessageCircle size={28} />
