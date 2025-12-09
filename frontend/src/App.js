@@ -7,6 +7,7 @@ import PropertiesPage from './pages/PropertiesPage';
 import SimulationPage from './pages/SimulationPage';
 import LandPage from './pages/LandPage';
 import ConstructionPage from './pages/ConstructionPage';
+import AppointmentPage from './pages/AppointmentPage';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import CookieConsent from './components/CookieConsent';
@@ -22,6 +23,7 @@ function App() {
             <Route path="/simulacao" element={<SimulationPage />} />
             <Route path="/terrenos" element={<LandPage />} />
             <Route path="/construcao" element={<ConstructionPage />} />
+            <Route path="/agendar" element={<AppointmentPage />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
           </Routes>
