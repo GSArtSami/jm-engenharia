@@ -432,18 +432,20 @@ const SimulationPage = () => {
                 <Label htmlFor="income" className="text-gray-700 font-medium mb-2 block">
                   Renda Familiar Média <span className="text-red-500">*</span>
                 </Label>
-                <Select value={income} onValueChange={setIncome}>
-                  <SelectTrigger className={`w-full text-lg ${errors.income ? 'border-red-500' : ''}`}>
-                    <SelectValue placeholder="Selecione a renda familiar" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {incomeOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="relative">
+                  <Select value={income} onValueChange={setIncome}>
+                    <SelectTrigger className={`w-full text-lg ${errors.income ? 'border-red-500' : ''}`}>
+                      <SelectValue placeholder="Selecione a renda familiar" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {incomeOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 {errors.income && (
                   <p className="text-red-500 text-sm mt-1">{errors.income}</p>
                 )}
