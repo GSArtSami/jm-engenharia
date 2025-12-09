@@ -11,7 +11,6 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const AdminLogin = () => {
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -24,7 +23,6 @@ const AdminLogin = () => {
 
     try {
       const response = await axios.post(`${API}/admin/login`, {
-        email,
         password
       });
 
@@ -34,7 +32,7 @@ const AdminLogin = () => {
         navigate('/admin/dashboard');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Erro ao fazer login. Verifique suas credenciais.');
+      setError(err.response?.data?.detail || 'Erro ao fazer login. Verifique sua senha.');
     } finally {
       setLoading(false);
     }
