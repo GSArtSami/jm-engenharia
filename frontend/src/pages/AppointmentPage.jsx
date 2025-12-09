@@ -344,6 +344,8 @@ const AppointmentPage = () => {
 
       <Footer />
       <WhatsAppButton />
+      <SimulationButton />
+      <ScheduleMeetingButton />
     </div>
   );
 };
