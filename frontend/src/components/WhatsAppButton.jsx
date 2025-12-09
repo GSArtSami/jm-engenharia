@@ -7,15 +7,16 @@ const WhatsAppButton = () => {
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
   return (
-    <div className="fixed bottom-24 left-8 z-50">
+    <div className="fixed bottom-8 right-8 z-50">
       <a
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-2xl transition-all duration-300 hover:shadow-3xl hover:scale-110 flex items-center justify-center"
+        className="px-6 py-4 bg-green-500 hover:bg-green-600 text-white font-medium rounded-full shadow-2xl transition-all duration-300 hover:shadow-3xl hover:scale-105 flex items-center gap-3"
         title="Fale conosco no WhatsApp"
       >
-        <MessageCircle size={28} />
+        <MessageCircle size={24} />
+        <span className="text-lg">Fale Conosco</span>
       </a>
     </div>
   );
