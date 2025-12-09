@@ -24,6 +24,8 @@ function App() {
           <Route path="/construcao" element={<ConstructionPage />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/properties" element={<AdminProperties />} />
+          <Route path="/admin/analytics" element={<AdminAnalytics />} />
         </Routes>
         <CookieConsent />
       </BrowserRouter>
