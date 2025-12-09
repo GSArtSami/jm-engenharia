@@ -105,21 +105,22 @@ async def delete_land(land_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
     raise HTTPException(status_code=404, detail="Terreno não encontrado")
 
 # Construction routes
-@router.get("/constructions", response_model=List[Construction])
-async def get_all_constructions(db: AsyncIOMotorDatabase):
+@router.get("/constructions")
+async def get_all_constructions(db: AsyncIOMotorDatabase = Depends(get_db)):
     constructions = await db.constructions.find().to_list(1000)
+    for construction in constructions:
+        construction["id"] = str(construction.pop("_id"))
     return constructions
 
 @router.post("/constructions")
-async def create_construction(construction: ConstructionCreate, db: AsyncIOMotorDatabase):
+async def create_construction(construction: ConstructionCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
     construction_dict = construction.dict()
     result = await db.constructions.insert_one(construction_dict)
     construction_dict["id"] = str(result.inserted_id)
     return {"success": True, "construction": construction_dict}
 
 @router.put("/constructions/{construction_id}")
-async def update_construction(construction_id: str, construction: ConstructionCreate, db: AsyncIOMotorDatabase):
-    from bson import ObjectId
+async def update_construction(construction_id: str, construction: ConstructionCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
     result = await db.constructions.update_one(
         {"_id": ObjectId(construction_id)},
         {"$set": construction.dict()}
@@ -129,8 +130,7 @@ async def update_construction(construction_id: str, construction: ConstructionCr
     raise HTTPException(status_code=404, detail="Construção não encontrada")
 
 @router.delete("/constructions/{construction_id}")
-async def delete_construction(construction_id: str, db: AsyncIOMotorDatabase):
-    from bson import ObjectId
+async def delete_construction(construction_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
     result = await db.constructions.delete_one({"_id": ObjectId(construction_id)})
     if result.deleted_count:
         return {"success": True}
