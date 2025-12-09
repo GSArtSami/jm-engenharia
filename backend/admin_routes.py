@@ -41,21 +41,22 @@ async def admin_login(login: AdminLogin):
     raise HTTPException(status_code=401, detail="Senha incorreta")
 
 # Property routes
-@router.get("/properties", response_model=List[Property])
-async def get_all_properties(db: AsyncIOMotorDatabase):
+@router.get("/properties")
+async def get_all_properties(db: AsyncIOMotorDatabase = Depends(get_db)):
     properties = await db.properties.find().to_list(1000)
+    for prop in properties:
+        prop["id"] = str(prop.pop("_id"))
     return properties
 
 @router.post("/properties")
-async def create_property(property: PropertyCreate, db: AsyncIOMotorDatabase):
+async def create_property(property: PropertyCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
     property_dict = property.dict()
     result = await db.properties.insert_one(property_dict)
     property_dict["id"] = str(result.inserted_id)
     return {"success": True, "property": property_dict}
 
 @router.put("/properties/{property_id}")
-async def update_property(property_id: str, property: PropertyCreate, db: AsyncIOMotorDatabase):
-    from bson import ObjectId
+async def update_property(property_id: str, property: PropertyCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
     result = await db.properties.update_one(
         {"_id": ObjectId(property_id)},
         {"$set": property.dict()}
@@ -65,8 +66,7 @@ async def update_property(property_id: str, property: PropertyCreate, db: AsyncI
     raise HTTPException(status_code=404, detail="Imóvel não encontrado")
 
 @router.delete("/properties/{property_id}")
-async def delete_property(property_id: str, db: AsyncIOMotorDatabase):
-    from bson import ObjectId
+async def delete_property(property_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
     result = await db.properties.delete_one({"_id": ObjectId(property_id)})
     if result.deleted_count:
         return {"success": True}
