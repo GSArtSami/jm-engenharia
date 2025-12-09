@@ -607,6 +607,7 @@ const SimulationPage = () => {
       </div>
 
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 };
