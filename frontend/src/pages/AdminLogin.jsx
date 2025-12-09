@@ -56,33 +56,22 @@ const AdminLogin = () => {
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
-            <Label htmlFor="email" className="text-gray-700 font-medium mb-2 block">
-              Email
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="seu@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="text-lg"
-            />
-          </div>
-
-          <div>
             <Label htmlFor="password" className="text-gray-700 font-medium mb-2 block">
-              Senha
+              Senha Administrativa
             </Label>
             <Input
               id="password"
               type="password"
-              placeholder="••••••••"
+              placeholder="••••••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               className="text-lg"
+              autoFocus
             />
+            <p className="text-sm text-gray-500 mt-2">
+              Digite a senha administrativa para acessar o painel
+            </p>
           </div>
 
           {error && (
