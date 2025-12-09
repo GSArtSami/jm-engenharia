@@ -456,18 +456,20 @@ const SimulationPage = () => {
                 <Label htmlFor="propertyValue" className="text-gray-700 font-medium mb-2 block">
                   Valor do Imóvel <span className="text-red-500">*</span>
                 </Label>
-                <Select value={propertyValue} onValueChange={setPropertyValue}>
-                  <SelectTrigger className={`w-full text-lg ${errors.propertyValue ? 'border-red-500' : ''}`}>
-                    <SelectValue placeholder="Selecione o valor do imóvel" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {propertyOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="relative">
+                  <Select value={propertyValue} onValueChange={setPropertyValue}>
+                    <SelectTrigger className={`w-full text-lg ${errors.propertyValue ? 'border-red-500' : ''}`}>
+                      <SelectValue placeholder="Selecione o valor do imóvel" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {propertyOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 {errors.propertyValue && (
                   <p className="text-red-500 text-sm mt-1">{errors.propertyValue}</p>
                 )}
