@@ -34,6 +34,20 @@ const AdminDashboard = () => {
       description: 'Adicionar, editar e remover terrenos',
       icon: MapPin,
       path: '/admin/lands'
+    },
+    {
+      id: 'analytics',
+      title: 'Análise de Acessos',
+      description: 'Visualizar estatísticas do site',
+      icon: 'BarChart',
+      path: '/admin/analytics'
+    },
+    {
+      id: 'appointments',
+      title: 'Agendamentos',
+      description: 'Gerenciar agendamentos de clientes',
+      icon: 'Calendar',
+      path: '/admin/appointments'
     }
   ];
 
