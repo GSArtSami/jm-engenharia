@@ -39,6 +39,7 @@ const ConstructionPage = () => {
 
       <Footer />
       <SimulationButton />
+      <WhatsAppButton />
     </div>
   );
 };
