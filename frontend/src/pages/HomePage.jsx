@@ -109,6 +109,7 @@ const HomePage = () => {
       </div>
 
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 };
