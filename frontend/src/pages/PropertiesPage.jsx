@@ -173,6 +173,7 @@ const PropertiesPage = () => {
       <Footer />
       <SimulationButton />
       <WhatsAppButton />
+      <ScheduleMeetingButton />
     </div>
   );
 };
