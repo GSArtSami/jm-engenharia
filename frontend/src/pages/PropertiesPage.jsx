@@ -160,7 +160,7 @@ const PropertiesPage = () => {
               <div className="rounded-lg overflow-hidden shadow-xl">
                 <img
                   src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&h=400&fit=crop"
-                  alt="Cury Building"
+                  alt="JM Engenharia Building"
                   className="w-full h-full object-cover"
                 />
               </div>
