@@ -78,7 +78,8 @@ const AdminDashboard = () => {
 
           <div className="grid md:grid-cols-2 gap-6">
             {adminOptions.map((option) => {
-              const Icon = option.icon;
+              const iconMap = { Home, MapPin, BarChart, Calendar };
+              const Icon = typeof option.icon === 'string' ? iconMap[option.icon] : option.icon;
               return (
                 <Link key={option.id} to={option.path}>
                   <Card className="p-8 cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 bg-white">
