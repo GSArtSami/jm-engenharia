@@ -9,10 +9,12 @@ from bson import ObjectId
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
-# Dependency to get database - will be injected from main server
+# Global db variable to be set by server
+db_instance = None
+
+# Dependency to get database
 def get_db():
-    from server import db
-    return db
+    return db_instance
 
 # Admin password
 ADMIN_PASSWORD = "JM@engcivil"
