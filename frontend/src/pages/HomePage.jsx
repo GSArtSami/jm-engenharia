@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import WhatsAppButton from '../components/WhatsAppButton';
 import { Card } from '../components/ui/card';
 import { Home, MapPin, Hammer, Calculator } from 'lucide-react';
 
