@@ -86,7 +86,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-600 text-sm">
-            © 2024 Cury Construtora. Todos os direitos reservados.
+            © 2024 JM Engenharia. Todos os direitos reservados.
           </p>
           <div className="flex gap-6 text-sm">
             <a href="#" className="text-gray-600 hover:text-[#00537C] transition-colors">
