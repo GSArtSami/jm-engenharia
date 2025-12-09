@@ -8,6 +8,8 @@ import LandPage from './pages/LandPage';
 import ConstructionPage from './pages/ConstructionPage';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminProperties from './pages/AdminProperties';
+import AdminAnalytics from './pages/AdminAnalytics';
 import CookieConsent from './components/CookieConsent';
 
 function App() {
