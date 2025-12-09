@@ -27,8 +27,8 @@ const HomePage = () => {
     },
     {
       id: 'construction-land',
-      title: 'Construcao + Terreno',
-      description: 'Construa seu imovel do zero',
+      title: 'Construção + Terreno',
+      description: 'Construa seu imóvel do zero',
       icon: Hammer,
       image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&h=600&fit=crop',
       action: () => navigate('/construcao')
