@@ -44,6 +44,14 @@ const Footer = () => {
                   Área do Cliente
                 </a>
               </li>
+              <li>
+                <a 
+                  href="/admin/login" 
+                  className="text-gray-500 hover:text-[#00537C] transition-colors text-xs italic"
+                >
+                  🔒 Admin
+                </a>
+              </li>
             </ul>
           </div>
 
