@@ -10,6 +10,8 @@ import ConstructionPage from './pages/ConstructionPage';
 import AppointmentPage from './pages/AppointmentPage';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminProperties from './pages/AdminProperties';
+import AdminLands from './pages/AdminLands';
 import CookieConsent from './components/CookieConsent';
 
 function App() {
@@ -26,6 +28,8 @@ function App() {
             <Route path="/agendar" element={<AppointmentPage />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/properties" element={<AdminProperties />} />
+            <Route path="/admin/lands" element={<AdminLands />} />
           </Routes>
           <CookieConsent />
         </BrowserRouter>
