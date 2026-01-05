@@ -58,15 +58,14 @@ async def get_available_slots():
         date = start_date + timedelta(days=i)
         if date.weekday() < 5:  # Monday to Friday
             slots.append({
-
-@router.get("/unavailable-dates")
-async def get_unavailable_dates(db: AsyncIOMotorDatabase = Depends(get_db)):
-    """Get list of unavailable dates marked by admin"""
-    dates = await db.unavailable_dates.find().to_list(1000)
-    return [date["date"] for date in dates]
-
                 "date": date.strftime("%Y-%m-%d"),
                 "times": ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"]
             })
     
     return slots
+
+@router.get("/unavailable-dates")
+async def get_unavailable_dates(db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Get list of unavailable dates marked by admin"""
+    dates = await db.unavailable_dates.find({}, {"_id": 0}).to_list(1000)
+    return [date["date"] for date in dates]
