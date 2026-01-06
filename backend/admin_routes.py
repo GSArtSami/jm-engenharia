@@ -116,7 +116,7 @@ async def get_all_constructions(db: AsyncIOMotorDatabase = Depends(get_db)):
 
 @router.post("/constructions")
 async def create_construction(construction: ConstructionCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
-    construction_dict = construction.dict()
+    construction_dict = construction.model_dump()
     result = await db.constructions.insert_one(construction_dict)
     construction_dict["id"] = str(result.inserted_id)
     return {"success": True, "construction": construction_dict}
