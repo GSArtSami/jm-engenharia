@@ -26,6 +26,7 @@ function App() {
             <Route path="/terrenos" element={<LandPage />} />
             <Route path="/construcao" element={<ConstructionPage />} />
             <Route path="/agendar" element={<AppointmentPage />} />
+            <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/properties" element={<AdminProperties />} />
