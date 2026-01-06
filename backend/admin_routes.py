@@ -84,7 +84,7 @@ async def get_all_lands(db: AsyncIOMotorDatabase = Depends(get_db)):
 
 @router.post("/lands")
 async def create_land(land: LandCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
-    land_dict = land.dict()
+    land_dict = land.model_dump()
     result = await db.lands.insert_one(land_dict)
     land_dict["id"] = str(result.inserted_id)
     return {"success": True, "land": land_dict}
