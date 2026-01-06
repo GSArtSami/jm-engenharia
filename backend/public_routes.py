@@ -35,7 +35,7 @@ async def create_appointment(
     db: AsyncIOMotorDatabase = Depends(get_db)
 ):
     """Create a new appointment request"""
-    appointment_dict = appointment.dict()
+    appointment_dict = appointment.model_dump()
     appointment_dict["status"] = "pending"
     appointment_dict["created_at"] = datetime.utcnow()
     
