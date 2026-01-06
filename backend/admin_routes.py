@@ -93,7 +93,7 @@ async def create_land(land: LandCreate, db: AsyncIOMotorDatabase = Depends(get_d
 async def update_land(land_id: str, land: LandCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
     result = await db.lands.update_one(
         {"_id": ObjectId(land_id)},
-        {"$set": land.dict()}
+        {"$set": land.model_dump()}
     )
     if result.modified_count:
         return {"success": True}
