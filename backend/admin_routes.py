@@ -42,6 +42,11 @@ async def admin_login(login: AdminLogin):
         return {"success": True, "token": token}
     raise HTTPException(status_code=401, detail="Senha incorreta")
 
+# Test endpoint for debugging
+@router.post("/test")
+async def test_endpoint():
+    return {"success": True, "message": "Test endpoint working"}
+
 # Property routes
 @router.get("/properties")
 async def get_all_properties(db: AsyncIOMotorDatabase = Depends(get_db)):
