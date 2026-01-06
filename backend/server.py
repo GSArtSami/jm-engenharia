@@ -78,10 +78,10 @@ import public_routes
 admin_routes.db_instance = db
 public_routes.db_instance = db
 
-# Include the routers in the main app
-app.include_router(api_router)
+# Include the sub-routers FIRST, then add api_router to app
 api_router.include_router(admin_routes.router)
 api_router.include_router(public_routes.router)
+app.include_router(api_router)
 
 app.add_middleware(
     CORSMiddleware,
