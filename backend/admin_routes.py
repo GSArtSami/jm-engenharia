@@ -61,7 +61,7 @@ async def create_property(property: PropertyCreate, db: AsyncIOMotorDatabase = D
 async def update_property(property_id: str, property: PropertyCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
     result = await db.properties.update_one(
         {"_id": ObjectId(property_id)},
-        {"$set": property.dict()}
+        {"$set": property.model_dump()}
     )
     if result.modified_count:
         return {"success": True}
