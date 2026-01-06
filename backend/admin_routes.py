@@ -53,8 +53,11 @@ async def get_all_properties(db: AsyncIOMotorDatabase = Depends(get_db)):
 @router.post("/properties")
 async def create_property(property: PropertyCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
     property_dict = property.model_dump()
+    property_dict["created_at"] = datetime.utcnow()
     result = await db.properties.insert_one(property_dict)
     property_dict["id"] = str(result.inserted_id)
+    # Convert datetime to ISO string for JSON serialization
+    property_dict["created_at"] = property_dict["created_at"].isoformat()
     return {"success": True, "property": property_dict}
 
 @router.put("/properties/{property_id}")
