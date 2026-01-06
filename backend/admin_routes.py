@@ -125,7 +125,7 @@ async def create_construction(construction: ConstructionCreate, db: AsyncIOMotor
 async def update_construction(construction_id: str, construction: ConstructionCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
     result = await db.constructions.update_one(
         {"_id": ObjectId(construction_id)},
-        {"$set": construction.dict()}
+        {"$set": construction.model_dump()}
     )
     if result.modified_count:
         return {"success": True}
