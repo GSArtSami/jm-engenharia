@@ -88,8 +88,11 @@ async def get_all_lands(db: AsyncIOMotorDatabase = Depends(get_db)):
 @router.post("/lands")
 async def create_land(land: LandCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
     land_dict = land.model_dump()
+    land_dict["created_at"] = datetime.utcnow()
     result = await db.lands.insert_one(land_dict)
     land_dict["id"] = str(result.inserted_id)
+    # Convert datetime to ISO string for JSON serialization
+    land_dict["created_at"] = land_dict["created_at"].isoformat()
     return {"success": True, "land": land_dict}
 
 @router.put("/lands/{land_id}")
