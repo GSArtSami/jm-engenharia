@@ -41,6 +41,8 @@ async def create_appointment(
     
     result = await db.appointments.insert_one(appointment_dict)
     appointment_dict["id"] = str(result.inserted_id)
+    # Convert datetime to ISO string for JSON serialization
+    appointment_dict["created_at"] = appointment_dict["created_at"].isoformat()
     
     return {"success": True, "appointment": appointment_dict}
 
