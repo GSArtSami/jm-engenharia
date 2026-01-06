@@ -52,7 +52,7 @@ async def get_all_properties(db: AsyncIOMotorDatabase = Depends(get_db)):
 
 @router.post("/properties")
 async def create_property(property: PropertyCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
-    property_dict = property.dict()
+    property_dict = property.model_dump()
     result = await db.properties.insert_one(property_dict)
     property_dict["id"] = str(result.inserted_id)
     return {"success": True, "property": property_dict}
