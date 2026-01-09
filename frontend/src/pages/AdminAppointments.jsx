@@ -58,10 +58,12 @@ const AdminAppointments = () => {
 
   const sendWhatsAppMessage = (phone, clientName, date, time) => {
     const formattedPhone = formatPhoneForWhatsApp(phone);
+    // Format date from YYYY-MM-DD to DD/MM/YYYY
+    const formattedDate = date ? date.split('-').reverse().join('/') : '';
     const message = encodeURIComponent(
       `Olá ${clientName}! 👋\n\n` +
       `Sua reunião foi *CONFIRMADA* ✅\n\n` +
-      `📅 Data: ${date}\n` +
+      `📅 Data: ${formattedDate}\n` +
       `🕐 Horário: ${time}\n\n` +
       `Aguardamos você!\n` +
       `- JM Engenharia`
@@ -76,7 +78,12 @@ const AdminAppointments = () => {
       
       // If confirming, open WhatsApp with message
       if (status === 'confirmed' && appointment) {
-        sendWhatsAppMessage(appointment.phone, appointment.name, appointment.date, appointment.time);
+        sendWhatsAppMessage(
+          appointment.phone, 
+          appointment.name, 
+          appointment.preferred_date, 
+          appointment.preferred_time
+        );
       }
       
       fetchData();
