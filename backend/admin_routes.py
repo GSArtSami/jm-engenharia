@@ -265,3 +265,39 @@ async def update_appointment_status(
     if result.modified_count:
         return {"success": True}
     raise HTTPException(status_code=404, detail="Agendamento não encontrado")
+
+
+
+# Unavailable dates routes
+@router.get("/unavailable-dates")
+async def get_unavailable_dates(db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Get all unavailable dates"""
+    dates = await db.unavailable_dates.find({}, {"_id": 0}).to_list(1000)
+    return dates
+
+@router.post("/unavailable-dates")
+async def add_unavailable_date(date: str = Body(..., embed=True), db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Mark a date as unavailable"""
+    # Check if date already exists
+    existing = await db.unavailable_dates.find_one({"date": date})
+    if existing:
+        raise HTTPException(status_code=400, detail="Data já está marcada como indisponível")
+    
+    await db.unavailable_dates.insert_one({"date": date})
+    return {"success": True, "date": date}
+
+@router.delete("/unavailable-dates/{date}")
+async def remove_unavailable_date(date: str, db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Remove a date from unavailable list"""
+    result = await db.unavailable_dates.delete_one({"date": date})
+    if result.deleted_count:
+        return {"success": True}
+    raise HTTPException(status_code=404, detail="Data não encontrada")
+
+@router.delete("/appointments/{appointment_id}")
+async def delete_appointment(appointment_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Delete an appointment"""
+    result = await db.appointments.delete_one({"_id": ObjectId(appointment_id)})
+    if result.deleted_count:
+        return {"success": True}
+    raise HTTPException(status_code=404, detail="Agendamento não encontrado")
