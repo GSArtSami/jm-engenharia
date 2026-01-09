@@ -4,9 +4,12 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
 import HomePage from './pages/HomePage';
 import PropertiesPage from './pages/PropertiesPage';
+import PropertyDetailPage from './pages/PropertyDetailPage';
 import SimulationPage from './pages/SimulationPage';
 import LandPage from './pages/LandPage';
+import LandDetailPage from './pages/LandDetailPage';
 import ConstructionPage from './pages/ConstructionPage';
+import ConstructionDetailPage from './pages/ConstructionDetailPage';
 import AppointmentPage from './pages/AppointmentPage';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
@@ -26,9 +29,12 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/imoveis" element={<PropertiesPage />} />
+            <Route path="/imoveis/:id" element={<PropertyDetailPage />} />
             <Route path="/simulacao" element={<SimulationPage />} />
             <Route path="/terrenos" element={<LandPage />} />
+            <Route path="/terrenos/:id" element={<LandDetailPage />} />
             <Route path="/construcao" element={<ConstructionPage />} />
+            <Route path="/construcao/:id" element={<ConstructionDetailPage />} />
             <Route path="/agendar" element={<AppointmentPage />} />
             <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
             <Route path="/admin/login" element={<AdminLogin />} />
