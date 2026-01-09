@@ -445,44 +445,215 @@ class BackendTester:
             self.log_result("Admin Unavailable Dates API", False, f"Request failed: {str(e)}")
             return False
     
-    def test_analytics_api(self):
-        """Test Analytics API"""
-        print("\n=== Testing Analytics API ===")
+    def test_file_upload_api(self):
+        """Test File Upload API"""
+        print("\n=== Testing File Upload API ===")
         
         if not self.admin_token:
-            self.log_result("Analytics API", False, "No admin token available")
+            self.log_result("File Upload API", False, "No admin token available")
             return False
         
         headers = {"Authorization": f"Bearer {self.admin_token}"}
         
         try:
-            # Test GET analytics summary
-            response = self.session.get(f"{BACKEND_URL}/admin/analytics/summary", headers=headers, timeout=10)
+            # Create a simple test image file (1x1 pixel PNG)
+            import io
+            test_image_data = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\tpHYs\x00\x00\x0b\x13\x00\x00\x0b\x13\x01\x00\x9a\x9c\x18\x00\x00\x00\x0cIDATx\x9cc```\x00\x00\x00\x04\x00\x01\xdd\x8d\xb4\x1c\x00\x00\x00\x00IEND\xaeB`\x82'
+            
+            # Test POST upload
+            files = {"file": ("test_image.png", io.BytesIO(test_image_data), "image/png")}
+            response = self.session.post(
+                f"{BACKEND_URL}/admin/upload",
+                files=files,
+                headers=headers,
+                timeout=10
+            )
+            
             if response.status_code == 200:
                 data = response.json()
-                expected_keys = ["today", "this_week", "this_month", "total", "unique_today"]
-                if all(key in data for key in expected_keys):
-                    self.log_result("Analytics Summary", True, f"Retrieved analytics: {data}")
+                if data.get("success") and data.get("url"):
+                    uploaded_url = data["url"]
+                    self.log_result("File Upload POST", True, f"File uploaded successfully: {uploaded_url}")
+                    
+                    # Test GET uploaded file
+                    filename = uploaded_url.split("/")[-1]
+                    response = self.session.get(
+                        f"{BACKEND_URL}/uploads/{filename}",
+                        timeout=10
+                    )
+                    
+                    if response.status_code == 200:
+                        self.log_result("File Upload GET", True, f"File served successfully: {filename}")
+                        return True
+                    else:
+                        self.log_result("File Upload GET", False, f"HTTP {response.status_code}", response.text)
+                        return False
                 else:
-                    self.log_result("Analytics Summary", False, "Missing expected keys in response", data)
+                    self.log_result("File Upload POST", False, "Upload response missing success/url", data)
                     return False
             else:
-                self.log_result("Analytics Summary", False, f"HTTP {response.status_code}", response.text)
+                self.log_result("File Upload POST", False, f"HTTP {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_result("File Upload API", False, f"Request failed: {str(e)}")
+            return False
+    
+    def test_constructions_crud(self):
+        """Test Constructions CRUD operations"""
+        print("\n=== Testing Constructions CRUD API ===")
+        
+        if not self.admin_token:
+            self.log_result("Constructions CRUD", False, "No admin token available")
+            return False
+        
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        construction_id = None
+        
+        try:
+            # Test GET all constructions
+            response = self.session.get(f"{BACKEND_URL}/admin/constructions", headers=headers, timeout=10)
+            if response.status_code == 200:
+                constructions = response.json()
+                self.log_result("Constructions GET", True, f"Retrieved {len(constructions)} constructions")
+            else:
+                self.log_result("Constructions GET", False, f"HTTP {response.status_code}", response.text)
                 return False
             
-            # Test GET analytics visits
-            response = self.session.get(f"{BACKEND_URL}/admin/analytics/visits", headers=headers, timeout=10)
+            # Test POST create construction
+            response = self.session.post(
+                f"{BACKEND_URL}/admin/constructions",
+                json=CONSTRUCTION_TEST_DATA,
+                headers=headers,
+                timeout=10
+            )
+            
             if response.status_code == 200:
                 data = response.json()
-                self.log_result("Analytics Visits", True, f"Retrieved {len(data)} visit records")
+                if data.get("success") and data.get("construction", {}).get("id"):
+                    construction_id = data["construction"]["id"]
+                    self.log_result("Constructions POST", True, f"Created construction with ID: {construction_id}")
+                else:
+                    self.log_result("Constructions POST", False, "Create response missing success/construction.id", data)
+                    return False
             else:
-                self.log_result("Analytics Visits", False, f"HTTP {response.status_code}", response.text)
+                self.log_result("Constructions POST", False, f"HTTP {response.status_code}", response.text)
                 return False
+            
+            # Test PUT update construction
+            if construction_id:
+                updated_data = CONSTRUCTION_TEST_DATA.copy()
+                updated_data["name"] = "Casa Moderna ATUALIZADA com Terreno"
+                
+                response = self.session.put(
+                    f"{BACKEND_URL}/admin/constructions/{construction_id}",
+                    json=updated_data,
+                    headers=headers,
+                    timeout=10
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get("success"):
+                        self.log_result("Constructions PUT", True, f"Updated construction {construction_id}")
+                    else:
+                        self.log_result("Constructions PUT", False, "Update response missing success", data)
+                else:
+                    self.log_result("Constructions PUT", False, f"HTTP {response.status_code}", response.text)
+            
+            # Test DELETE construction
+            if construction_id:
+                response = self.session.delete(
+                    f"{BACKEND_URL}/admin/constructions/{construction_id}",
+                    headers=headers,
+                    timeout=10
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get("success"):
+                        self.log_result("Constructions DELETE", True, f"Deleted construction {construction_id}")
+                    else:
+                        self.log_result("Constructions DELETE", False, "Delete response missing success", data)
+                else:
+                    self.log_result("Constructions DELETE", False, f"HTTP {response.status_code}", response.text)
             
             return True
             
         except Exception as e:
-            self.log_result("Analytics API", False, f"Request failed: {str(e)}")
+            self.log_result("Constructions CRUD", False, f"Request failed: {str(e)}")
+            return False
+    
+    def test_simulations_api(self):
+        """Test Simulations API (both public save and admin management)"""
+        print("\n=== Testing Simulations API ===")
+        
+        simulation_id = None
+        
+        try:
+            # Test POST save simulation (public endpoint)
+            response = self.session.post(
+                f"{BACKEND_URL}/simulations",
+                json=SIMULATION_TEST_DATA,
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and data.get("id"):
+                    simulation_id = data["id"]
+                    self.log_result("Simulations POST (Public)", True, f"Saved simulation with ID: {simulation_id}")
+                else:
+                    self.log_result("Simulations POST (Public)", False, "Save response missing success/id", data)
+                    return False
+            else:
+                self.log_result("Simulations POST (Public)", False, f"HTTP {response.status_code}", response.text)
+                return False
+            
+            # Test admin endpoints (require token)
+            if not self.admin_token:
+                self.log_result("Simulations Admin API", False, "No admin token available")
+                return False
+            
+            headers = {"Authorization": f"Bearer {self.admin_token}"}
+            
+            # Test GET all simulations (admin endpoint)
+            response = self.session.get(f"{BACKEND_URL}/admin/simulations", headers=headers, timeout=10)
+            if response.status_code == 200:
+                simulations = response.json()
+                self.log_result("Simulations GET (Admin)", True, f"Retrieved {len(simulations)} simulations")
+                
+                # Verify our simulation is in the list
+                found_simulation = any(sim.get("id") == simulation_id for sim in simulations)
+                if found_simulation:
+                    self.log_result("Simulations Verification", True, "Created simulation found in admin list")
+                else:
+                    self.log_result("Simulations Verification", False, "Created simulation not found in admin list")
+            else:
+                self.log_result("Simulations GET (Admin)", False, f"HTTP {response.status_code}", response.text)
+                return False
+            
+            # Test DELETE simulation (admin endpoint)
+            if simulation_id:
+                response = self.session.delete(
+                    f"{BACKEND_URL}/admin/simulations/{simulation_id}",
+                    headers=headers,
+                    timeout=10
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get("success"):
+                        self.log_result("Simulations DELETE (Admin)", True, f"Deleted simulation {simulation_id}")
+                    else:
+                        self.log_result("Simulations DELETE (Admin)", False, "Delete response missing success", data)
+                else:
+                    self.log_result("Simulations DELETE (Admin)", False, f"HTTP {response.status_code}", response.text)
+            
+            return True
+            
+        except Exception as e:
+            self.log_result("Simulations API", False, f"Request failed: {str(e)}")
             return False
     
     def run_all_tests(self):
