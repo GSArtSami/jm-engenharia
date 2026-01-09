@@ -43,7 +43,7 @@ const AdminAppointments = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
-    navigate('/admin/login');
+    navigate('/');
   };
 
   const updateAppointmentStatus = async (id, status) => {

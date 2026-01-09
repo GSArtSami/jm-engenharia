@@ -42,7 +42,7 @@ const AdminAnalytics = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
-    navigate('/admin/login');
+    navigate('/');
   };
 
   const StatCard = ({ title, value, icon: Icon, color, subtitle }) => (

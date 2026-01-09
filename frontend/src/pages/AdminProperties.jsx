@@ -47,7 +47,7 @@ const AdminProperties = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
-    navigate('/admin/login');
+    navigate('/');
   };
 
   const openModal = (property = null) => {

@@ -44,7 +44,7 @@ const AdminLands = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
-    navigate('/admin/login');
+    navigate('/');
   };
 
   const openModal = (land = null) => {
