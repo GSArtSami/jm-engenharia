@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -11,6 +12,7 @@ import { MapPin, Ruler, Image } from 'lucide-react';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const LandPage = () => {
+  const navigate = useNavigate();
   const [lands, setLands] = useState([]);
   const [loading, setLoading] = useState(true);
 
