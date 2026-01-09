@@ -62,8 +62,19 @@ const AdminSimulations = () => {
   };
 
   const formatCurrency = (value) => {
-    if (!value) return 'N/A';
-    return `R$ ${parseFloat(value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+    if (!value || value === 'N/A') return 'N/A';
+    // If value is already a formatted string (e.g., "R$ 68.555,16"), return as is
+    if (typeof value === 'string' && value.includes('R$')) {
+      return value;
+    }
+    // If value is a string number with Brazilian format, return with R$
+    if (typeof value === 'string' && value.includes(',')) {
+      return `R$ ${value}`;
+    }
+    // Try to parse as number
+    const num = parseFloat(value);
+    if (isNaN(num)) return value || 'N/A';
+    return `R$ ${num.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
   };
 
   return (
