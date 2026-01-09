@@ -46,9 +46,39 @@ const AdminAppointments = () => {
     navigate('/');
   };
 
-  const updateAppointmentStatus = async (id, status) => {
+  const formatPhoneForWhatsApp = (phone) => {
+    // Remove all non-numeric characters
+    const cleaned = phone.replace(/\D/g, '');
+    // Add Brazil country code if not present
+    if (cleaned.startsWith('55')) {
+      return cleaned;
+    }
+    return '55' + cleaned;
+  };
+
+  const sendWhatsAppMessage = (phone, clientName, date, time) => {
+    const formattedPhone = formatPhoneForWhatsApp(phone);
+    const message = encodeURIComponent(
+      `Olá ${clientName}! 👋\n\n` +
+      `Sua reunião foi *CONFIRMADA* ✅\n\n` +
+      `📅 Data: ${date}\n` +
+      `🕐 Horário: ${time}\n\n` +
+      `Aguardamos você!\n` +
+      `- JM Engenharia`
+    );
+    const whatsappUrl = `https://wa.me/${formattedPhone}?text=${message}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const updateAppointmentStatus = async (id, status, appointment = null) => {
     try {
       await axios.put(`${API}/admin/appointments/${id}/status`, { status });
+      
+      // If confirming, open WhatsApp with message
+      if (status === 'confirmed' && appointment) {
+        sendWhatsAppMessage(appointment.phone, appointment.name, appointment.date, appointment.time);
+      }
+      
       fetchData();
     } catch (error) {
       alert('Erro ao atualizar status');
