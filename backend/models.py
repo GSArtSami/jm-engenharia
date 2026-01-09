@@ -13,8 +13,8 @@ class Property(BaseModel):
     description: str
     bedrooms: int
     badge: str = "Lançamento"
-    image: str
-    amenities: List[Amenity]
+    images: List[str] = []  # Multiple images
+    amenities: List[Amenity] = []
     propertyValue: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -24,8 +24,8 @@ class PropertyCreate(BaseModel):
     description: str
     bedrooms: int
     badge: str = "Lançamento"
-    image: str
-    amenities: List[Amenity]
+    images: List[str] = []
+    amenities: List[Amenity] = []
     propertyValue: str
 
 class Land(BaseModel):
@@ -33,7 +33,7 @@ class Land(BaseModel):
     name: str
     location: str
     description: str
-    image: str
+    images: List[str] = []  # Multiple images
     area: str
     price: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
@@ -42,7 +42,7 @@ class LandCreate(BaseModel):
     name: str
     location: str
     description: str
-    image: str
+    images: List[str] = []
     area: str
     price: str
 
@@ -51,18 +51,24 @@ class Construction(BaseModel):
     name: str
     location: str
     description: str
-    image: str
-    price: str
-    features: List[str]
+    images: List[str] = []  # Multiple images
+    landPrice: str  # Valor do terreno
+    constructionPrice: str  # Valor da construção
+    landArea: str  # Área do terreno
+    builtArea: str  # Área construída
+    totalPrice: str  # Valor total
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class ConstructionCreate(BaseModel):
     name: str
     location: str
     description: str
-    image: str
-    price: str
-    features: List[str]
+    images: List[str] = []
+    landPrice: str
+    constructionPrice: str
+    landArea: str
+    builtArea: str
+    totalPrice: str
 
 class AdminLogin(BaseModel):
     password: str
@@ -92,3 +98,24 @@ class AppointmentCreate(BaseModel):
     preferred_date: str
     preferred_time: str
     message: Optional[str] = None
+
+# Simulation models
+class SimulationResult(BaseModel):
+    id: Optional[str] = None
+    client_name: str
+    client_phone: str
+    income: str
+    income_label: str
+    property_value: str
+    property_value_label: str
+    result_data: dict  # Store the full simulation result
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class SimulationCreate(BaseModel):
+    client_name: str
+    client_phone: str
+    income: str
+    income_label: str
+    property_value: str
+    property_value_label: str
+    result_data: dict
