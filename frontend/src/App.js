@@ -34,6 +34,7 @@ function App() {
             <Route path="/admin/properties" element={<AdminProperties />} />
             <Route path="/admin/lands" element={<AdminLands />} />
             <Route path="/admin/appointments" element={<AdminAppointments />} />
+            <Route path="/admin/analytics" element={<AdminAnalytics />} />
           </Routes>
           <CookieConsent />
         </BrowserRouter>
