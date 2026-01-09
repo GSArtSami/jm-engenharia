@@ -79,7 +79,11 @@ const ConstructionPage = () => {
             <p className="text-gray-600 mb-6">{constructions.length} projetos disponíveis</p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {constructions.map((construction) => (
-                <Card key={construction.id} className="bg-white overflow-hidden hover:shadow-lg transition-shadow">
+                <Card 
+                  key={construction.id} 
+                  className="bg-white overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => navigate(`/construcao/${construction.id}`)}
+                >
                   <div className="aspect-video bg-gray-100 relative">
                     {getImageUrl(construction) ? (
                       <img
