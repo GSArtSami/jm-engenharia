@@ -339,21 +339,56 @@ const SimulationPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const calculateSimulation = () => {
+  const calculateSimulation = async () => {
     if (!validateForm()) {
       return;
     }
 
     // Buscar dados da simulação
     const simData = simulationData[propertyValue]?.[income];
+    const incomeLabel = incomeOptions.find(i => i.value === income)?.label;
+    const propertyLabel = propertyOptions.find(p => p.value === propertyValue)?.label;
     
     if (simData) {
-      setResult({
+      const resultData = {
         name: name,
-        propertyValue: propertyOptions.find(p => p.value === propertyValue)?.label,
-        incomeLabel: incomeOptions.find(i => i.value === income)?.label,
+        propertyValue: propertyLabel,
+        incomeLabel: incomeLabel,
         ...simData
-      });
+      };
+      
+      setResult(resultData);
+
+      // Save simulation to backend
+      try {
+        await axios.post(`${BACKEND_URL}/api/simulations`, {
+          client_name: name,
+          client_phone: phone,
+          income: income,
+          income_label: incomeLabel,
+          property_value: propertyValue,
+          property_value_label: propertyLabel,
+          result_data: {
+            rendaInsuficiente: resultData.rendaInsuficiente || false,
+            taxaJuros: simData.juros,
+            valorImovel: propertyValue,
+            entrada: simData.entrada,
+            subsidio: simData.subsidio,
+            valorLiberado: simData.liberado,
+            prazo: 420,
+            sistemaSAC: {
+              primeiraParcela: simData.sacPrimeira?.replace('R$ ', '').replace('.', '').replace(',', '.'),
+              ultimaParcela: simData.sacUltima?.replace('R$ ', '').replace('.', '').replace(',', '.')
+            },
+            sistemaPRICE: {
+              parcelaFixa: simData.pricePrimeira?.replace('R$ ', '').replace('.', '').replace(',', '.')
+            }
+          }
+        });
+      } catch (error) {
+        console.log('Erro ao salvar simulação:', error);
+        // Continue even if save fails - don't block user experience
+      }
     }
   };
 
