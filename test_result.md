@@ -254,8 +254,8 @@ test_plan:
   current_focus:
     - "Admin Login API"
     - "Admin Login Page"
-    - "Homepage"
-    - "Simulation Page"
+    - "Properties CRUD API"
+    - "Lands CRUD API"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
