@@ -142,7 +142,11 @@ const PropertiesPage = () => {
           <>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {currentProperties.map((property) => (
-                <Card key={property.id} className="bg-white overflow-hidden hover:shadow-lg transition-shadow">
+                <Card 
+                  key={property.id} 
+                  className="bg-white overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => navigate(`/imoveis/${property.id}`)}
+                >
                   <div className="aspect-video bg-gray-100 relative">
                     {getImageUrl(property) ? (
                       <img
