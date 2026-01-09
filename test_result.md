@@ -295,11 +295,17 @@ frontend:
         agent: "testing"
         comment: "✅ COMPREHENSIVE TESTING COMPLETED: Property detail page loads successfully when clicking on property cards. Shows 'Voltar para Imóveis' button, property name, property value (R$), 'Simular Financiamento' button, and 'Agendar Visita' button. All property information displays correctly and navigation buttons are functional. Property detail functionality working perfectly."
 
-metadata:
-  created_by: "main_agent"
-  version: "1.0"
-  test_sequence: 1
-  run_ui: true
+  - task: "Admin Simulations Page"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/AdminSimulations.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ COMPREHENSIVE TESTING COMPLETED: Admin simulations page loads correctly with 'Simulações dos Clientes' title. Shows simulation count badge (6 simulações). Displays saved client simulations including Maria Santos with complete details: Renda Familiar, Valor do Imóvel, Taxa de Juros, Status (Aprovado). Expandable details functionality works showing Valores and Parcelas sections. Navigation buttons (Voltar ao Dashboard, Sair) are functional. All admin simulation management functionality working perfectly."
 
 test_plan:
   current_focus:
