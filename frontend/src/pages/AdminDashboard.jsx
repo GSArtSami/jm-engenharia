@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Card } from '../components/ui/card';
-import { Home, MapPin, LogOut, BarChart, Calendar } from 'lucide-react';
+import { Home, MapPin, LogOut, BarChart, Calendar, Building, Calculator } from 'lucide-react';
 import { Button } from '../components/ui/button';
 
 const AdminDashboard = () => {
@@ -24,7 +24,7 @@ const AdminDashboard = () => {
     {
       id: 'properties',
       title: 'Gerenciar Imóveis',
-      description: 'Adicionar, editar e remover imóveis',
+      description: 'Adicionar, editar e remover casas prontas',
       icon: Home,
       path: '/admin/properties'
     },
@@ -36,18 +36,32 @@ const AdminDashboard = () => {
       path: '/admin/lands'
     },
     {
-      id: 'analytics',
-      title: 'Análise de Acessos',
-      description: 'Visualizar estatísticas do site',
-      icon: 'BarChart',
-      path: '/admin/analytics'
+      id: 'constructions',
+      title: 'Gerenciar Construções',
+      description: 'Projetos de construção + terreno',
+      icon: Building,
+      path: '/admin/constructions'
+    },
+    {
+      id: 'simulations',
+      title: 'Simulações de Clientes',
+      description: 'Ver simulações realizadas pelos clientes',
+      icon: Calculator,
+      path: '/admin/simulations'
     },
     {
       id: 'appointments',
       title: 'Agendamentos',
       description: 'Gerenciar agendamentos de clientes',
-      icon: 'Calendar',
+      icon: Calendar,
       path: '/admin/appointments'
+    },
+    {
+      id: 'analytics',
+      title: 'Análise de Acessos',
+      description: 'Visualizar estatísticas do site',
+      icon: BarChart,
+      path: '/admin/analytics'
     }
   ];
 
@@ -69,30 +83,29 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto">
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-5xl mx-auto">
           <h1 className="text-4xl font-bold mb-2" style={{ color: '#00537C' }}>
             Painel Administrativo
           </h1>
-          <p className="text-gray-600 mb-12">Gerencie imóveis e terrenos</p>
+          <p className="text-gray-600 mb-8">Gerencie todo o conteúdo do site</p>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {adminOptions.map((option) => {
-              const iconMap = { Home, MapPin, BarChart, Calendar };
-              const Icon = typeof option.icon === 'string' ? iconMap[option.icon] : option.icon;
+              const Icon = option.icon;
               return (
                 <Link key={option.id} to={option.path}>
-                  <Card className="p-8 cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 bg-white">
+                  <Card className="p-6 cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 bg-white h-full">
                     <div
-                      className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
+                      className="w-14 h-14 rounded-full flex items-center justify-center mb-4"
                       style={{ backgroundColor: '#00537C' }}
                     >
-                      <Icon size={32} className="text-white" />
+                      <Icon size={28} className="text-white" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-2" style={{ color: '#00537C' }}>
+                    <h3 className="text-xl font-bold mb-2" style={{ color: '#00537C' }}>
                       {option.title}
                     </h3>
-                    <p className="text-gray-600">{option.description}</p>
+                    <p className="text-gray-600 text-sm">{option.description}</p>
                   </Card>
                 </Link>
               );
