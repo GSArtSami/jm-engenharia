@@ -1,16 +1,23 @@
-from fastapi import APIRouter, HTTPException, Depends, Body, Request
+from fastapi import APIRouter, HTTPException, Depends, Body, Request, UploadFile, File
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from models import Property, PropertyCreate, Land, LandCreate, Construction, ConstructionCreate, AdminLogin, PageVisit, Appointment, AppointmentCreate
+from models import Property, PropertyCreate, Land, LandCreate, Construction, ConstructionCreate, AdminLogin, PageVisit, Appointment, AppointmentCreate, SimulationCreate
 from typing import List, Dict
 import os
 import jwt
+import uuid
+import shutil
 from datetime import datetime, timedelta
 from bson import ObjectId
+from pathlib import Path
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
 # Global db variable to be set by server
 db_instance = None
+
+# Upload directory
+UPLOAD_DIR = Path("/app/backend/uploads")
+UPLOAD_DIR.mkdir(exist_ok=True)
 
 # Dependency to get database
 def get_db():
@@ -42,10 +49,34 @@ async def admin_login(login: AdminLogin):
         return {"success": True, "token": token}
     raise HTTPException(status_code=401, detail="Senha incorreta")
 
-# Test endpoint for debugging
-@router.post("/test")
-async def test_endpoint():
-    return {"success": True, "message": "Test endpoint working"}
+# File upload endpoint
+@router.post("/upload")
+async def upload_file(file: UploadFile = File(...)):
+    """Upload a single image file"""
+    # Validate file type
+    allowed_types = ["image/jpeg", "image/png", "image/webp", "image/gif"]
+    if file.content_type not in allowed_types:
+        raise HTTPException(status_code=400, detail="Tipo de arquivo não permitido. Use JPG, PNG, WebP ou GIF.")
+    
+    # Check file size (5MB max)
+    file.file.seek(0, 2)  # Seek to end
+    file_size = file.file.tell()
+    file.file.seek(0)  # Seek back to start
+    
+    if file_size > 5 * 1024 * 1024:  # 5MB
+        raise HTTPException(status_code=400, detail="Arquivo muito grande. Máximo 5MB.")
+    
+    # Generate unique filename
+    ext = file.filename.split(".")[-1] if "." in file.filename else "jpg"
+    filename = f"{uuid.uuid4()}.{ext}"
+    filepath = UPLOAD_DIR / filename
+    
+    # Save file
+    with open(filepath, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    
+    # Return the URL path
+    return {"success": True, "url": f"/api/uploads/{filename}"}
 
 # Property routes
 @router.get("/properties")
