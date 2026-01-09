@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Menu, X, ChevronDown, Building2, Tv, TrendingUp, AlertCircle, Briefcase, CreditCard, MapPin, Calculator, Users } from 'lucide-react';
+import { Menu, X, Home } from 'lucide-react';
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -10,16 +10,26 @@ const Header = () => {
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-4">
-          {/* Logo */}
-          <div
-            className="flex items-center gap-2 cursor-pointer"
-            onClick={() => navigate('/')}
-          >
-            <img 
-              src="/logo.jpg" 
-              alt="Cury Logo" 
-              className="h-8 w-auto object-contain"
-            />
+          {/* Logo and Home Button */}
+          <div className="flex items-center gap-4">
+            <div
+              className="flex items-center gap-3 cursor-pointer"
+              onClick={() => navigate('/')}
+            >
+              <img 
+                src="/logo.jpg" 
+                alt="JM Engenharia Logo" 
+                className="h-12 w-auto object-contain"
+              />
+            </div>
+            <button
+              className="flex items-center gap-2 px-4 py-2 font-medium transition-colors duration-200 hover:bg-gray-50 rounded-lg border border-gray-200"
+              style={{ color: '#00537C' }}
+              onClick={() => navigate('/')}
+            >
+              <Home size={20} />
+              <span>Início</span>
+            </button>
           </div>
 
           {/* Desktop Navigation */}
@@ -67,6 +77,17 @@ const Header = () => {
         {menuOpen && (
           <div className="md:hidden py-4 border-t">
             <nav className="flex flex-col gap-2">
+              <button
+                className="px-4 py-3 font-medium text-left transition-colors duration-200 hover:bg-gray-50 rounded-lg flex items-center gap-2"
+                style={{ color: '#00537C' }}
+                onClick={() => {
+                  navigate('/');
+                  setMenuOpen(false);
+                }}
+              >
+                <Home size={20} />
+                Início
+              </button>
               <button
                 className="px-4 py-3 font-medium text-left transition-colors duration-200 hover:bg-gray-50 rounded-lg"
                 style={{ color: '#00537C' }}
