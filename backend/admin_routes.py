@@ -163,8 +163,13 @@ async def get_all_constructions(db: AsyncIOMotorDatabase = Depends(get_db)):
 @router.post("/constructions")
 async def create_construction(construction: ConstructionCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
     construction_dict = construction.model_dump()
+    construction_dict["created_at"] = datetime.utcnow()
     result = await db.constructions.insert_one(construction_dict)
+    # Remove _id and add string id
+    construction_dict.pop("_id", None)
     construction_dict["id"] = str(result.inserted_id)
+    # Convert datetime to ISO string for JSON serialization
+    construction_dict["created_at"] = construction_dict["created_at"].isoformat()
     return {"success": True, "construction": construction_dict}
 
 @router.put("/constructions/{construction_id}")
