@@ -317,6 +317,27 @@ async def add_unavailable_date(date: str = Body(..., embed=True), db: AsyncIOMot
     await db.unavailable_dates.insert_one({"date": date})
     return {"success": True, "date": date}
 
+
+
+# Simulations routes
+@router.get("/simulations")
+async def get_all_simulations(db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Get all saved simulations"""
+    simulations = await db.simulations.find().sort("created_at", -1).to_list(1000)
+    for sim in simulations:
+        sim["id"] = str(sim.pop("_id"))
+        if "created_at" in sim and hasattr(sim["created_at"], "isoformat"):
+            sim["created_at"] = sim["created_at"].isoformat()
+    return simulations
+
+@router.delete("/simulations/{simulation_id}")
+async def delete_simulation(simulation_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Delete a saved simulation"""
+    result = await db.simulations.delete_one({"_id": ObjectId(simulation_id)})
+    if result.deleted_count:
+        return {"success": True}
+    raise HTTPException(status_code=404, detail="Simulação não encontrada")
+
 @router.delete("/unavailable-dates/{date}")
 async def remove_unavailable_date(date: str, db: AsyncIOMotorDatabase = Depends(get_db)):
     """Remove a date from unavailable list"""
