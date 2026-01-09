@@ -128,6 +128,8 @@ async def create_land(land: LandCreate, db: AsyncIOMotorDatabase = Depends(get_d
     land_dict = land.model_dump()
     land_dict["created_at"] = datetime.utcnow()
     result = await db.lands.insert_one(land_dict)
+    # Remove _id and add string id
+    land_dict.pop("_id", None)
     land_dict["id"] = str(result.inserted_id)
     # Convert datetime to ISO string for JSON serialization
     land_dict["created_at"] = land_dict["created_at"].isoformat()
