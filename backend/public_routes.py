@@ -1,12 +1,17 @@
 from fastapi import APIRouter, Depends, Request
+from fastapi.responses import FileResponse
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from models import PageVisit, AppointmentCreate
+from models import PageVisit, AppointmentCreate, SimulationCreate
 from datetime import datetime
+from pathlib import Path
 
 router = APIRouter(tags=["public"])
 
 # Global db variable to be set by server
 db_instance = None
+
+# Upload directory
+UPLOAD_DIR = Path("/app/backend/uploads")
 
 # Dependency to get database
 def get_db():
@@ -28,6 +33,29 @@ async def track_page_visit(
     
     await db.page_visits.insert_one(visit)
     return {"success": True}
+
+# Serve uploaded files
+@router.get("/uploads/{filename}")
+async def get_uploaded_file(filename: str):
+    """Serve uploaded images"""
+    filepath = UPLOAD_DIR / filename
+    if not filepath.exists():
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Arquivo não encontrado")
+    return FileResponse(filepath)
+
+# Save simulation
+@router.post("/simulations")
+async def save_simulation(
+    simulation: SimulationCreate,
+    db: AsyncIOMotorDatabase = Depends(get_db)
+):
+    """Save a client simulation result"""
+    sim_dict = simulation.model_dump()
+    sim_dict["created_at"] = datetime.utcnow()
+    
+    result = await db.simulations.insert_one(sim_dict)
+    return {"success": True, "id": str(result.inserted_id)}
 
 @router.post("/appointments")
 async def create_appointment(
