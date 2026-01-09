@@ -13,6 +13,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminProperties from './pages/AdminProperties';
 import AdminLands from './pages/AdminLands';
 import AdminAppointments from './pages/AdminAppointments';
+import AdminAnalytics from './pages/AdminAnalytics';
 import CookieConsent from './components/CookieConsent';
 
 function App() {
