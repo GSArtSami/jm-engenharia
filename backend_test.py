@@ -269,12 +269,19 @@ class BackendTester:
             self.log_result("Lands CRUD", False, f"Request failed: {str(e)}")
             return False
     
-    def test_appointments_api(self):
-        """Test Appointments API"""
-        print("\n=== Testing Appointments API ===")
+    def test_admin_appointments_api(self):
+        """Test Admin Appointments API"""
+        print("\n=== Testing Admin Appointments API ===")
+        
+        if not self.admin_token:
+            self.log_result("Admin Appointments API", False, "No admin token available")
+            return False
+        
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        appointment_id = None
         
         try:
-            # Test POST create appointment (public endpoint)
+            # First create an appointment via public endpoint
             response = self.session.post(
                 f"{BACKEND_URL}/appointments",
                 json=APPOINTMENT_TEST_DATA,
@@ -285,36 +292,123 @@ class BackendTester:
                 data = response.json()
                 if data.get("success") and data.get("appointment", {}).get("id"):
                     appointment_id = data["appointment"]["id"]
-                    self.log_result("Appointments POST", True, f"Created appointment with ID: {appointment_id}")
+                    self.log_result("Create Appointment (Public)", True, f"Created appointment with ID: {appointment_id}")
                 else:
-                    self.log_result("Appointments POST", False, "Create response missing success/appointment.id", data)
+                    self.log_result("Create Appointment (Public)", False, "Create response missing success/appointment.id", data)
                     return False
             else:
-                self.log_result("Appointments POST", False, f"HTTP {response.status_code}", response.text)
+                self.log_result("Create Appointment (Public)", False, f"HTTP {response.status_code}", response.text)
                 return False
             
-            # Test GET unavailable dates (public endpoint)
-            response = self.session.get(f"{BACKEND_URL}/unavailable-dates", timeout=10)
+            # Test GET all appointments (admin endpoint)
+            response = self.session.get(f"{BACKEND_URL}/admin/appointments", headers=headers, timeout=10)
             if response.status_code == 200:
-                dates = response.json()
-                self.log_result("Unavailable Dates GET", True, f"Retrieved {len(dates)} unavailable dates")
+                appointments = response.json()
+                self.log_result("Admin GET Appointments", True, f"Retrieved {len(appointments)} appointments")
             else:
-                self.log_result("Unavailable Dates GET", False, f"HTTP {response.status_code}", response.text)
+                self.log_result("Admin GET Appointments", False, f"HTTP {response.status_code}", response.text)
                 return False
             
-            # Test GET available slots (public endpoint)
-            response = self.session.get(f"{BACKEND_URL}/appointments/available-slots", timeout=10)
-            if response.status_code == 200:
-                slots = response.json()
-                self.log_result("Available Slots GET", True, f"Retrieved {len(slots)} available slot days")
-            else:
-                self.log_result("Available Slots GET", False, f"HTTP {response.status_code}", response.text)
-                return False
+            # Test PUT update appointment status (admin endpoint)
+            if appointment_id:
+                response = self.session.put(
+                    f"{BACKEND_URL}/admin/appointments/{appointment_id}/status",
+                    json={"status": "confirmed"},
+                    headers=headers,
+                    timeout=10
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get("success"):
+                        self.log_result("Admin Update Appointment Status", True, f"Updated appointment {appointment_id} to confirmed")
+                    else:
+                        self.log_result("Admin Update Appointment Status", False, "Update response missing success", data)
+                else:
+                    self.log_result("Admin Update Appointment Status", False, f"HTTP {response.status_code}", response.text)
+            
+            # Test DELETE appointment (admin endpoint)
+            if appointment_id:
+                response = self.session.delete(
+                    f"{BACKEND_URL}/admin/appointments/{appointment_id}",
+                    headers=headers,
+                    timeout=10
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get("success"):
+                        self.log_result("Admin DELETE Appointment", True, f"Deleted appointment {appointment_id}")
+                    else:
+                        self.log_result("Admin DELETE Appointment", False, "Delete response missing success", data)
+                else:
+                    self.log_result("Admin DELETE Appointment", False, f"HTTP {response.status_code}", response.text)
             
             return True
             
         except Exception as e:
-            self.log_result("Appointments API", False, f"Request failed: {str(e)}")
+            self.log_result("Admin Appointments API", False, f"Request failed: {str(e)}")
+            return False
+    
+    def test_admin_unavailable_dates_api(self):
+        """Test Admin Unavailable Dates API"""
+        print("\n=== Testing Admin Unavailable Dates API ===")
+        
+        if not self.admin_token:
+            self.log_result("Admin Unavailable Dates API", False, "No admin token available")
+            return False
+        
+        headers = {"Authorization": f"Bearer {self.admin_token}"}
+        test_date = "2026-01-20"
+        
+        try:
+            # Test GET unavailable dates (admin endpoint)
+            response = self.session.get(f"{BACKEND_URL}/admin/unavailable-dates", headers=headers, timeout=10)
+            if response.status_code == 200:
+                dates = response.json()
+                self.log_result("Admin GET Unavailable Dates", True, f"Retrieved {len(dates)} unavailable dates")
+            else:
+                self.log_result("Admin GET Unavailable Dates", False, f"HTTP {response.status_code}", response.text)
+                return False
+            
+            # Test POST add unavailable date (admin endpoint)
+            response = self.session.post(
+                f"{BACKEND_URL}/admin/unavailable-dates",
+                json={"date": test_date},
+                headers=headers,
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success"):
+                    self.log_result("Admin POST Unavailable Date", True, f"Added unavailable date: {test_date}")
+                else:
+                    self.log_result("Admin POST Unavailable Date", False, "Post response missing success", data)
+            else:
+                self.log_result("Admin POST Unavailable Date", False, f"HTTP {response.status_code}", response.text)
+                return False
+            
+            # Test DELETE unavailable date (admin endpoint)
+            response = self.session.delete(
+                f"{BACKEND_URL}/admin/unavailable-dates/{test_date}",
+                headers=headers,
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success"):
+                    self.log_result("Admin DELETE Unavailable Date", True, f"Removed unavailable date: {test_date}")
+                else:
+                    self.log_result("Admin DELETE Unavailable Date", False, "Delete response missing success", data)
+            else:
+                self.log_result("Admin DELETE Unavailable Date", False, f"HTTP {response.status_code}", response.text)
+            
+            return True
+            
+        except Exception as e:
+            self.log_result("Admin Unavailable Dates API", False, f"Request failed: {str(e)}")
             return False
     
     def test_analytics_api(self):
