@@ -1,33 +1,60 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import PropertyCard from '../components/PropertyCard';
 import SimulationButton from '../components/SimulationButton';
 import WhatsAppButton from '../components/WhatsAppButton';
 import ScheduleMeetingButton from '../components/ScheduleMeetingButton';
-import { properties, bedroomOptions } from '../mockData';
+import { Card } from '../components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { Search } from 'lucide-react';
+import { Search, Home, MapPin, Bed, Image } from 'lucide-react';
 import { Button } from '../components/ui/button';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
 const PropertiesPage = () => {
+  const [properties, setProperties] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [selectedBedrooms, setSelectedBedrooms] = useState('all');
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const propertiesPerPage = 12;
+
+  const bedroomOptions = [
+    { id: 'all', name: 'Todos' },
+    { id: '1', name: '1 Quarto' },
+    { id: '2', name: '2 Quartos' },
+    { id: '3', name: '3 Quartos' }
+  ];
+
+  useEffect(() => {
+    fetchProperties();
+  }, []);
+
+  const fetchProperties = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/admin/properties`);
+      setProperties(response.data);
+      setFilteredProperties(response.data);
+    } catch (error) {
+      console.error('Error fetching properties:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     let filtered = properties;
 
-    if (selectedBedrooms !== 'all' && selectedBedrooms !== 'studio') {
+    if (selectedBedrooms !== 'all') {
       filtered = filtered.filter(
-        (prop) => prop.bedrooms.toString() === selectedBedrooms
+        (prop) => prop.bedrooms?.toString() === selectedBedrooms
       );
     }
 
     setFilteredProperties(filtered);
     setCurrentPage(1);
-  }, [selectedBedrooms]);
+  }, [selectedBedrooms, properties]);
 
   // Pagination
   const indexOfLastProperty = currentPage * propertiesPerPage;
@@ -38,10 +65,16 @@ const PropertiesPage = () => {
   );
   const totalPages = Math.ceil(filteredProperties.length / propertiesPerPage);
 
-  // Filter bedroom options to only show 1, 2, 3
-  const bedroomFilterOptions = bedroomOptions.filter(opt => 
-    opt.id === 'all' || opt.id === '1' || opt.id === '2' || opt.id === '3'
-  );
+  const getImageUrl = (property) => {
+    if (property.images && property.images.length > 0) {
+      const img = property.images[0];
+      return img.startsWith('/api') ? `${BACKEND_URL}${img}` : img;
+    }
+    if (property.image) {
+      return property.image.startsWith('/api') ? `${BACKEND_URL}${property.image}` : property.image;
+    }
+    return null;
+  };
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#e0e0e0' }}>
@@ -51,7 +84,7 @@ const PropertiesPage = () => {
       <div className="bg-white shadow-sm py-8">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold mb-6 text-center" style={{ color: '#00537C' }}>
-            Encontre seu imóvel
+            Casas Prontas
           </h2>
           
           <div className="max-w-2xl mx-auto">
@@ -66,7 +99,7 @@ const PropertiesPage = () => {
                     <SelectValue placeholder="Selecione" />
                   </SelectTrigger>
                   <SelectContent>
-                    {bedroomFilterOptions.map((option) => (
+                    {bedroomOptions.map((option) => (
                       <SelectItem key={option.id} value={option.id}>
                         {option.name}
                       </SelectItem>
@@ -89,85 +122,92 @@ const PropertiesPage = () => {
         </div>
       </div>
 
-      {/* Properties Grid */}
-      <div className="container mx-auto px-4 py-12 flex-grow">
-        <h3 className="text-2xl font-bold mb-8" style={{ color: '#00537C' }}>
-          Casas Disponíveis
-        </h3>
+      {/* Results Section */}
+      <div className="container mx-auto px-4 py-8 flex-grow">
+        <p className="text-gray-600 mb-6">
+          {filteredProperties.length} imóveis encontrados
+        </p>
 
-        {currentProperties.length > 0 ? (
+        {loading ? (
+          <div className="text-center py-16 text-gray-500">Carregando imóveis...</div>
+        ) : filteredProperties.length === 0 ? (
+          <Card className="p-12 text-center bg-white">
+            <Home size={48} className="mx-auto text-gray-300 mb-4" />
+            <p className="text-gray-500 text-lg mb-2">Nenhum imóvel disponível no momento</p>
+            <p className="text-gray-400">Entre em contato conosco para mais informações.</p>
+          </Card>
+        ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {currentProperties.map((property) => (
-                <PropertyCard key={property.id} property={property} />
+                <Card key={property.id} className="bg-white overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="aspect-video bg-gray-100 relative">
+                    {getImageUrl(property) ? (
+                      <img
+                        src={getImageUrl(property)}
+                        alt={property.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Image size={48} className="text-gray-300" />
+                      </div>
+                    )}
+                    {property.badge && (
+                      <span className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
+                        {property.badge}
+                      </span>
+                    )}
+                    {property.images && property.images.length > 1 && (
+                      <span className="absolute bottom-2 right-2 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded">
+                        +{property.images.length - 1} fotos
+                      </span>
+                    )}
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-bold text-lg mb-1" style={{ color: '#00537C' }}>
+                      {property.name}
+                    </h3>
+                    <div className="flex items-center gap-1 text-gray-500 text-sm mb-2">
+                      <MapPin size={14} />
+                      {property.location}
+                    </div>
+                    <div className="flex items-center gap-1 text-gray-500 text-sm mb-3">
+                      <Bed size={14} />
+                      {property.bedrooms} {property.bedrooms === 1 ? 'quarto' : 'quartos'}
+                    </div>
+                    <p className="font-bold text-xl" style={{ color: '#00537C' }}>
+                      {property.propertyValue}
+                    </p>
+                  </div>
+                </Card>
               ))}
             </div>
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex justify-center gap-2 mt-12">
-                {[...Array(totalPages)].map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentPage(index + 1)}
-                    className={
-                      `w-10 h-10 rounded-lg font-medium transition-all duration-200 ${
-                        currentPage === index + 1
-                          ? 'text-white shadow-lg'
-                          : 'bg-white text-gray-700 hover:bg-gray-100'
-                      }`
-                    }
-                    style={currentPage === index + 1 ? { backgroundColor: '#00537C' } : {}}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
+              <div className="flex justify-center gap-2 mt-8">
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                >
+                  Anterior
+                </Button>
+                <span className="flex items-center px-4 text-gray-600">
+                  Página {currentPage} de {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                >
+                  Próxima
+                </Button>
               </div>
             )}
           </>
-        ) : (
-          <div className="text-center py-16">
-            <p className="text-gray-600 text-lg">
-              Nenhum imóvel encontrado com os filtros selecionados.
-            </p>
-          </div>
         )}
-      </div>
-
-      {/* About Section */}
-      <div className="bg-white py-16" id="sobre">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
-                <h3 className="text-3xl font-bold mb-6" style={{ color: '#00537C' }}>
-                  Imóveis com a qualidade JM Engenharia
-                </h3>
-                <p className="text-gray-700 leading-relaxed mb-6">
-                  A JM Engenharia é uma empresa comprometida em realizar sonhos através de
-                  imóveis de qualidade e projetos personalizados.
-                </p>
-                <p className="text-gray-700 leading-relaxed mb-6">
-                  Nossa missão é oferecer as melhores condições de financiamento e atendimento
-                  personalizado para cada cliente.
-                </p>
-                <Button
-                  className="px-6 py-3 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg"
-                  style={{ backgroundColor: '#00537C' }}
-                >
-                  Saiba mais
-                </Button>
-              </div>
-              <div className="rounded-lg overflow-hidden shadow-xl">
-                <img
-                  src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&h=400&fit=crop"
-                  alt="JM Engenharia Building"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
 
       <Footer />
