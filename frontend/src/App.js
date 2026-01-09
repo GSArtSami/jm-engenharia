@@ -12,6 +12,7 @@ import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProperties from './pages/AdminProperties';
 import AdminLands from './pages/AdminLands';
+import AdminAppointments from './pages/AdminAppointments';
 import CookieConsent from './components/CookieConsent';
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/properties" element={<AdminProperties />} />
             <Route path="/admin/lands" element={<AdminLands />} />
+            <Route path="/admin/appointments" element={<AdminAppointments />} />
           </Routes>
           <CookieConsent />
         </BrowserRouter>
