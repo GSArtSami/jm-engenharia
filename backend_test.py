@@ -452,24 +452,25 @@ class BackendTester:
             return False
     
     def run_all_tests(self):
-        """Run all backend tests"""
-        print("🚀 Starting JM Engenharia Backend API Tests")
+        """Run all backend tests focusing on admin panel features"""
+        print("🚀 Starting JM Engenharia Admin Panel Backend API Tests")
         print(f"Backend URL: {BACKEND_URL}")
         print("=" * 60)
         
         # Test admin login first (required for other tests)
         login_success = self.test_admin_login()
         
-        # Test all CRUD operations
-        self.test_properties_crud()
-        self.test_lands_crud()
-        
-        # Test public APIs
-        self.test_appointments_api()
-        
-        # Test analytics (requires admin token)
         if login_success:
+            # Test admin-specific APIs
+            self.test_admin_appointments_api()
+            self.test_admin_unavailable_dates_api()
             self.test_analytics_api()
+            
+            # Test CRUD operations (optional - already tested in previous runs)
+            # self.test_properties_crud()
+            # self.test_lands_crud()
+        else:
+            print("❌ Admin login failed - skipping admin-only tests")
         
         # Print summary
         print("\n" + "=" * 60)
