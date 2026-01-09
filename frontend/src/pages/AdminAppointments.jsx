@@ -61,10 +61,10 @@ const AdminAppointments = () => {
     // Format date from YYYY-MM-DD to DD/MM/YYYY
     const formattedDate = date ? date.split('-').reverse().join('/') : '';
     const message = encodeURIComponent(
-      `Olá ${clientName}! 👋\n\n` +
-      `Sua reunião foi *CONFIRMADA* ✅\n\n` +
-      `📅 Data: ${formattedDate}\n` +
-      `🕐 Horário: ${time}\n\n` +
+      `Olá ${clientName}!\n\n` +
+      `Sua reunião foi CONFIRMADA!\n\n` +
+      `Data: ${formattedDate}\n` +
+      `Horário: ${time}\n\n` +
       `Aguardamos você!\n` +
       `- JM Engenharia`
     );
