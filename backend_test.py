@@ -51,6 +51,40 @@ APPOINTMENT_TEST_DATA = {
     "message": "Gostaria de conhecer as opções de casas prontas na região de Alphaville."
 }
 
+# Realistic test data for constructions
+CONSTRUCTION_TEST_DATA = {
+    "name": "Casa Moderna com Terreno Incluso",
+    "location": "Condomínio Residencial Vila Verde, Cotia - SP",
+    "description": "Projeto completo de casa moderna de 180m² em terreno de 300m². Inclui 3 suítes, sala ampla, cozinha gourmet e área de lazer.",
+    "landPrice": "R$ 250.000",
+    "constructionPrice": "R$ 450.000",
+    "landArea": "300m²",
+    "builtArea": "180m²",
+    "totalPrice": "R$ 700.000",
+    "images": [
+        "/api/uploads/casa-moderna-1.jpg",
+        "/api/uploads/casa-moderna-2.jpg"
+    ]
+}
+
+# Realistic test data for simulations
+SIMULATION_TEST_DATA = {
+    "client_name": "João Carlos Oliveira",
+    "client_phone": "(11) 98765-4321",
+    "income": "8500",
+    "income_label": "R$ 8.500",
+    "property_value": "450000",
+    "property_value_label": "R$ 450.000",
+    "result_data": {
+        "taxa_juros": "10.5%",
+        "entrada": "R$ 90.000",
+        "valor_liberado": "R$ 360.000",
+        "sac_parcelas": "R$ 2.850",
+        "price_parcelas": "R$ 3.120",
+        "aprovado": True
+    }
+}
+
 class BackendTester:
     def __init__(self):
         self.session = requests.Session()
