@@ -79,7 +79,11 @@ const LandPage = () => {
             <p className="text-gray-600 mb-6">{lands.length} terrenos disponíveis</p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {lands.map((land) => (
-                <Card key={land.id} className="bg-white overflow-hidden hover:shadow-lg transition-shadow">
+                <Card 
+                  key={land.id} 
+                  className="bg-white overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => navigate(`/terrenos/${land.id}`)}
+                >
                   <div className="aspect-video bg-gray-100 relative">
                     {getImageUrl(land) ? (
                       <img
