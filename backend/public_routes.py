@@ -41,6 +41,8 @@ async def create_appointment(
     
     result = await db.appointments.insert_one(appointment_dict)
     appointment_dict["id"] = str(result.inserted_id)
+    # Remove MongoDB's _id field if it exists
+    appointment_dict.pop("_id", None)
     # Convert datetime to ISO string for JSON serialization
     appointment_dict["created_at"] = appointment_dict["created_at"].isoformat()
     
