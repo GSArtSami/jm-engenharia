@@ -91,6 +91,8 @@ async def create_property(property: PropertyCreate, db: AsyncIOMotorDatabase = D
     property_dict = property.model_dump()
     property_dict["created_at"] = datetime.utcnow()
     result = await db.properties.insert_one(property_dict)
+    # Remove _id and add string id
+    property_dict.pop("_id", None)
     property_dict["id"] = str(result.inserted_id)
     # Convert datetime to ISO string for JSON serialization
     property_dict["created_at"] = property_dict["created_at"].isoformat()
