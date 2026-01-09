@@ -355,7 +355,7 @@ const AdminAppointments = () => {
                         {apt.status === 'pending' && (
                           <>
                             <Button
-                              onClick={() => updateAppointmentStatus(apt.id, 'confirmed')}
+                              onClick={() => updateAppointmentStatus(apt.id, 'confirmed', apt)}
                               className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white"
                               size="sm"
                             >
