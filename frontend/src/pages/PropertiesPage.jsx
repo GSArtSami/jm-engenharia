@@ -95,18 +95,17 @@ const PropertiesPage = () => {
                 <label className="block text-sm font-medium mb-2" style={{ color: '#2c3e50' }}>
                   Número de Dormitórios
                 </label>
-                <Select value={selectedBedrooms} onValueChange={setSelectedBedrooms}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Selecione" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {bedroomOptions.map((option) => (
-                      <SelectItem key={option.id} value={option.id}>
-                        {option.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <select 
+                  value={selectedBedrooms} 
+                  onChange={(e) => setSelectedBedrooms(e.target.value)}
+                  className="w-full h-10 px-3 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {bedroomOptions.map((option) => (
+                    <option key={option.id} value={option.id}>
+                      {option.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="flex items-end">
