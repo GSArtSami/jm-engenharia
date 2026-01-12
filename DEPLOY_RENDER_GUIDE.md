@@ -1,124 +1,106 @@
-# 🚀 GUIA COMPLETO DE DEPLOY NO RENDER - JM Engenharia
+# 🚀 GUIA DE DEPLOY NO RENDER - JM Engenharia
 
-## 📋 ÍNDICE
-1. Pré-requisitos
-2. Configurar MongoDB Atlas (Banco de Dados)
-3. Deploy do Backend (FastAPI)
-4. Deploy do Frontend (React)
-5. Conectar Tudo
-6. Testar
+## ⚠️ IMPORTANTE: Estrutura do Projeto
 
----
+Seu projeto tem esta estrutura:
+```
+/
+├── frontend/          ← React (package.json está aqui)
+│   ├── package.json
+│   ├── src/
+│   └── public/
+├── backend/           ← FastAPI (requirements.txt está aqui)
+│   ├── requirements.txt
+│   ├── server.py
+│   └── ...
+└── README.md
+```
 
-## 1️⃣ PRÉ-REQUISITOS
-
-### Você vai precisar:
-- Conta no Render (https://render.com) - Gratuito
-- Conta no MongoDB Atlas (https://mongodb.com/atlas) - Gratuito
-- Código do projeto no GitHub
-
-### Como salvar o código no GitHub:
-1. No Emergent, clique em "Save to GitHub"
-2. Conecte sua conta GitHub
-3. Crie um novo repositório ou selecione um existente
-4. Clique em "PUSH TO GITHUB"
+**Por isso, você DEVE configurar o "Root Directory" no Render!**
 
 ---
 
-## 2️⃣ CONFIGURAR MONGODB ATLAS (BANCO DE DADOS)
+## 📋 PASSO A PASSO COMPLETO
 
-### Passo 1: Criar conta
-1. Acesse https://mongodb.com/atlas
-2. Crie uma conta gratuita
+### PASSO 1: Criar Banco de Dados no MongoDB Atlas
 
-### Passo 2: Criar Cluster
-1. Clique em "Build a Database"
-2. Escolha "M0 FREE" (gratuito)
-3. Escolha a região mais próxima (ex: São Paulo)
-4. Clique em "Create"
+1. Acesse: https://mongodb.com/atlas
+2. Crie conta gratuita
+3. Clique em **"Build a Database"** → Escolha **"M0 FREE"**
+4. Região: São Paulo (ou mais próxima)
+5. Clique **"Create"**
 
-### Passo 3: Criar usuário do banco
-1. Vá em "Database Access" no menu lateral
-2. Clique em "Add New Database User"
-3. Anote:
-   - Username: `jmengenharia`
-   - Password: (crie uma senha forte e ANOTE)
-4. Clique em "Add User"
+#### Criar usuário do banco:
+1. Menu lateral → **"Database Access"**
+2. **"Add New Database User"**
+3. Username: `jmengenharia`
+4. Password: `SuaSenhaForte123` (anote!)
+5. **"Add User"**
 
-### Passo 4: Permitir acesso de qualquer IP
-1. Vá em "Network Access" no menu lateral
-2. Clique em "Add IP Address"
-3. Clique em "Allow Access from Anywhere" (0.0.0.0/0)
-4. Clique em "Confirm"
+#### Liberar acesso:
+1. Menu lateral → **"Network Access"**
+2. **"Add IP Address"**
+3. **"Allow Access from Anywhere"** (0.0.0.0/0)
+4. **"Confirm"**
 
-### Passo 5: Obter a URL de conexão
-1. Vá em "Database" no menu lateral
-2. Clique em "Connect" no seu cluster
-3. Escolha "Connect your application"
-4. Copie a URL, será algo como:
-   ```
-   mongodb+srv://jmengenharia:<password>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
-   ```
-5. Substitua `<password>` pela senha que você criou
-6. **GUARDE ESTA URL** - Você vai usar no Render
+#### Copiar URL de conexão:
+1. Menu lateral → **"Database"**
+2. Clique **"Connect"** no seu cluster
+3. **"Connect your application"**
+4. Copie a URL:
+```
+mongodb+srv://jmengenharia:SuaSenhaForte123@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
+```
 
 ---
 
-## 3️⃣ DEPLOY DO BACKEND (FastAPI)
+### PASSO 2: Deploy do BACKEND no Render
 
-### Passo 1: Criar Web Service no Render
-1. Acesse https://dashboard.render.com
-2. Clique em "New +" → "Web Service"
+1. Acesse: https://dashboard.render.com
+2. Clique **"New +"** → **"Web Service"**
 3. Conecte seu GitHub e selecione o repositório
 
-### Passo 2: Configurações do Backend
-Preencha os campos:
+#### ⚠️ CONFIGURAÇÕES IMPORTANTES:
 
 | Campo | Valor |
 |-------|-------|
-| **Name** | `jm-engenharia-backend` |
-| **Region** | `Oregon (US West)` ou mais próximo |
+| **Name** | `jm-engenharia-api` |
+| **Region** | `Oregon (US West)` |
 | **Branch** | `main` |
 | **Root Directory** | `backend` |
 | **Runtime** | `Python 3` |
 | **Build Command** | `pip install -r requirements.txt` |
 | **Start Command** | `gunicorn server:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT` |
 
-### Passo 3: Variáveis de Ambiente do Backend
-Clique em "Advanced" → "Add Environment Variable" e adicione:
+#### Variáveis de Ambiente (clique em "Advanced"):
 
 | Key | Value |
 |-----|-------|
-| `MONGO_URL` | `mongodb+srv://jmengenharia:SUA_SENHA@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority` |
+| `MONGO_URL` | `mongodb+srv://jmengenharia:SuaSenhaForte123@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority` |
 | `DB_NAME` | `jm_engenharia` |
 | `CORS_ORIGINS` | `*` |
-| `SECRET_KEY` | `sua-chave-secreta-aqui-123456` |
+| `SECRET_KEY` | `jm-engenharia-secret-key-2024` |
 | `PYTHON_VERSION` | `3.11.0` |
 
-### Passo 4: Deploy
-1. Clique em "Create Web Service"
-2. Aguarde o deploy (5-10 minutos)
-3. Quando terminar, você terá uma URL tipo:
-   `https://jm-engenharia-backend.onrender.com`
-4. **GUARDE ESTA URL** - Você vai usar no frontend
+4. Clique **"Create Web Service"**
+5. Aguarde o deploy (5-10 minutos)
+6. Anote a URL gerada: `https://jm-engenharia-api.onrender.com`
 
-### Passo 5: Testar Backend
+#### Testar Backend:
 Acesse no navegador:
 ```
-https://jm-engenharia-backend.onrender.com/api/
+https://jm-engenharia-api.onrender.com/api/
 ```
 Deve retornar: `{"message":"Hello World"}`
 
 ---
 
-## 4️⃣ DEPLOY DO FRONTEND (React)
+### PASSO 3: Deploy do FRONTEND no Render
 
-### Passo 1: Criar Static Site no Render
-1. No Render, clique em "New +" → "Static Site"
-2. Selecione o mesmo repositório do GitHub
+1. No Render, clique **"New +"** → **"Static Site"**
+2. Selecione o mesmo repositório
 
-### Passo 2: Configurações do Frontend
-Preencha os campos:
+#### ⚠️ CONFIGURAÇÕES IMPORTANTES:
 
 | Campo | Valor |
 |-------|-------|
@@ -128,95 +110,76 @@ Preencha os campos:
 | **Build Command** | `yarn install && yarn build` |
 | **Publish Directory** | `build` |
 
-### Passo 3: Variáveis de Ambiente do Frontend
-Clique em "Advanced" → "Add Environment Variable":
+#### Variáveis de Ambiente:
 
 | Key | Value |
 |-----|-------|
-| `REACT_APP_BACKEND_URL` | `https://jm-engenharia-backend.onrender.com` |
+| `REACT_APP_BACKEND_URL` | `https://jm-engenharia-api.onrender.com` |
 
-⚠️ **IMPORTANTE**: Use a URL do seu backend que você criou no passo anterior!
+#### Configurar Redirect (MUITO IMPORTANTE):
+1. Vá em **"Redirects/Rewrites"**
+2. Adicione:
+   - **Source:** `/*`
+   - **Destination:** `/index.html`
+   - **Action:** `Rewrite`
 
-### Passo 4: Configurar Redirecionamentos (SPA)
-Em "Redirects/Rewrites", adicione:
-- Source: `/*`
-- Destination: `/index.html`
-- Action: `Rewrite`
-
-Isso é necessário para o React Router funcionar.
-
-### Passo 5: Deploy
-1. Clique em "Create Static Site"
-2. Aguarde o deploy (5-10 minutos)
-3. Sua URL será algo como:
-   `https://jm-engenharia.onrender.com`
+3. Clique **"Create Static Site"**
+4. Aguarde o deploy (5-10 minutos)
 
 ---
 
-## 5️⃣ VERIFICAÇÃO FINAL
+## ✅ CHECKLIST FINAL
 
-### Teste estas páginas:
-- [ ] Homepage: `https://jm-engenharia.onrender.com/`
-- [ ] Imóveis: `https://jm-engenharia.onrender.com/imoveis`
-- [ ] Simulação: `https://jm-engenharia.onrender.com/simulacao`
-- [ ] Admin: `https://jm-engenharia.onrender.com/admin`
-
-### Senha do Admin:
-```
-JM@engcivil
-```
+- [ ] MongoDB Atlas configurado com usuário e IP liberado
+- [ ] Backend no Render com **Root Directory = `backend`**
+- [ ] Frontend no Render com **Root Directory = `frontend`**
+- [ ] Variável `REACT_APP_BACKEND_URL` apontando para o backend
+- [ ] Redirect `/*` → `/index.html` configurado no frontend
 
 ---
 
-## 📝 RESUMO DAS VARIÁVEIS DE AMBIENTE
+## 🔑 CREDENCIAIS DO SISTEMA
 
-### Backend (.env):
-```
-MONGO_URL=mongodb+srv://jmengenharia:SUA_SENHA@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
-DB_NAME=jm_engenharia
-CORS_ORIGINS=*
-SECRET_KEY=sua-chave-secreta-aqui-123456
-```
-
-### Frontend (.env):
-```
-REACT_APP_BACKEND_URL=https://jm-engenharia-backend.onrender.com
-```
-
----
-
-## ⚠️ NOTAS IMPORTANTES
-
-1. **Plano Gratuito do Render**: O backend "dorme" após 15 minutos de inatividade. A primeira requisição pode demorar 30-60 segundos.
-
-2. **MongoDB Atlas Gratuito**: Limite de 512MB de armazenamento. Suficiente para começar.
-
-3. **Domínio Personalizado**: Você pode adicionar seu próprio domínio no Render (ex: jmengenharia.com.br)
-
-4. **HTTPS**: O Render já fornece HTTPS gratuito automaticamente.
+**Admin do Site:**
+- URL: `https://seu-site.onrender.com/admin`
+- Senha: `JM@engcivil`
 
 ---
 
 ## 🆘 PROBLEMAS COMUNS
 
-### Backend não inicia:
-- Verifique se `MONGO_URL` está correta
-- Verifique se o IP está liberado no MongoDB Atlas
+### "Cannot find package.json"
+**Solução:** Configure **Root Directory = `frontend`** no Static Site
 
-### Frontend não conecta ao backend:
-- Verifique se `REACT_APP_BACKEND_URL` está correta
-- Verifique se o backend está rodando
+### "Cannot find requirements.txt"  
+**Solução:** Configure **Root Directory = `backend`** no Web Service
 
-### Erro de CORS:
-- Adicione a URL do frontend em `CORS_ORIGINS` no backend
+### Backend não inicia
+**Solução:** Verifique se `MONGO_URL` está correta e IP liberado no Atlas
+
+### Frontend não conecta ao backend
+**Solução:** Verifique se `REACT_APP_BACKEND_URL` está correta
+
+### Páginas dão erro 404
+**Solução:** Configure o redirect `/*` → `/index.html`
 
 ---
 
-## 📞 SUPORTE
+## 📱 URLs FINAIS
 
-Se tiver problemas:
-1. Verifique os logs no Render (aba "Logs")
-2. Verifique se todas as variáveis de ambiente estão corretas
-3. Teste o backend isoladamente antes do frontend
+Após o deploy, suas URLs serão:
+- **Site:** `https://jm-engenharia.onrender.com`
+- **API:** `https://jm-engenharia-api.onrender.com`
+- **Admin:** `https://jm-engenharia.onrender.com/admin`
 
-Boa sorte com o deploy! 🚀
+---
+
+## ⏰ NOTA SOBRE PLANO GRATUITO
+
+O plano gratuito do Render "adormece" o backend após 15 minutos de inatividade.
+- A primeira requisição após o "sono" pode demorar 30-60 segundos
+- Isso é normal e não afeta o funcionamento
+
+Para evitar isso, você pode:
+1. Fazer upgrade para plano pago ($7/mês)
+2. Usar um serviço de "ping" como UptimeRobot para manter ativo
