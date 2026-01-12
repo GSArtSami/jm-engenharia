@@ -470,20 +470,19 @@ const SimulationPage = () => {
                 <Label htmlFor="income" className="text-gray-700 font-medium mb-2 block">
                   Renda Familiar Média <span className="text-red-500">*</span>
                 </Label>
-                <div className="relative">
-                  <Select value={income} onValueChange={setIncome}>
-                    <SelectTrigger className={`w-full text-lg ${errors.income ? 'border-red-500' : ''}`}>
-                      <SelectValue placeholder="Selecione a renda familiar" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {incomeOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                <select
+                  id="income"
+                  value={income}
+                  onChange={(e) => setIncome(e.target.value)}
+                  className={`w-full h-12 px-3 text-lg border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.income ? 'border-red-500' : 'border-gray-300'}`}
+                >
+                  <option value="">Selecione a renda familiar</option>
+                  {incomeOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
                 {errors.income && (
                   <p className="text-red-500 text-sm mt-1">{errors.income}</p>
                 )}
@@ -494,20 +493,19 @@ const SimulationPage = () => {
                 <Label htmlFor="propertyValue" className="text-gray-700 font-medium mb-2 block">
                   Valor do Imóvel <span className="text-red-500">*</span>
                 </Label>
-                <div className="relative">
-                  <Select value={propertyValue} onValueChange={setPropertyValue}>
-                    <SelectTrigger className={`w-full text-lg ${errors.propertyValue ? 'border-red-500' : ''}`}>
-                      <SelectValue placeholder="Selecione o valor do imóvel" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {propertyOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                <select
+                  id="propertyValue"
+                  value={propertyValue}
+                  onChange={(e) => setPropertyValue(e.target.value)}
+                  className={`w-full h-12 px-3 text-lg border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.propertyValue ? 'border-red-500' : 'border-gray-300'}`}
+                >
+                  <option value="">Selecione o valor do imóvel</option>
+                  {propertyOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
                 {errors.propertyValue && (
                   <p className="text-red-500 text-sm mt-1">{errors.propertyValue}</p>
                 )}
