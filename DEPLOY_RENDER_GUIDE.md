@@ -82,7 +82,7 @@ Preencha os campos:
 | **Root Directory** | `backend` |
 | **Runtime** | `Python 3` |
 | **Build Command** | `pip install -r requirements.txt` |
-| **Start Command** | `uvicorn server:app --host 0.0.0.0 --port $PORT` |
+| **Start Command** | `gunicorn server:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT` |
 
 ### Passo 3: Variáveis de Ambiente do Backend
 Clique em "Advanced" → "Add Environment Variable" e adicione:
