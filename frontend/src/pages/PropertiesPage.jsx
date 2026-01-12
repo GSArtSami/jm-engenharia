@@ -7,7 +7,6 @@ import SimulationButton from '../components/SimulationButton';
 import WhatsAppButton from '../components/WhatsAppButton';
 import ScheduleMeetingButton from '../components/ScheduleMeetingButton';
 import { Card } from '../components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Search, Home, MapPin, Bed, Image } from 'lucide-react';
 import { Button } from '../components/ui/button';
 
