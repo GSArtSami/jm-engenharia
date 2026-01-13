@@ -1,4 +1,5 @@
 from fastapi import FastAPI, APIRouter, Depends
+from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
@@ -13,6 +14,16 @@ from datetime import datetime, timezone
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
+
+# Create uploads directory if it doesn't exist
+UPLOAD_DIR = ROOT_DIR / "uploads"
+try:
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+except Exception as e:
+    print(f"Warning: Could not create uploads directory: {e}")
+    import tempfile
+    UPLOAD_DIR = Path(tempfile.gettempdir()) / "jm_uploads"
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
