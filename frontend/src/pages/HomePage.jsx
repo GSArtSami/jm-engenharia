@@ -15,7 +15,7 @@ const HomePage = () => {
     {
       id: 'ready-houses',
       title: 'Casas Prontas',
-      description: 'Imóveis prontos para morar',
+      description: 'Imoveis prontos para morar',
       icon: Home,
       image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop',
       action: () => navigate('/imoveis')
@@ -23,22 +23,22 @@ const HomePage = () => {
     {
       id: 'land',
       title: 'Terrenos',
-      description: 'Terrenos disponíveis',
+      description: 'Terrenos disponiveis',
       icon: MapPin,
       image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=600&fit=crop',
       action: () => navigate('/terrenos')
     },
     {
       id: 'construction-land',
-      title: 'Construção + Terreno',
-      description: 'Construa seu imóvel do zero',
+      title: 'Construcao + Terreno',
+      description: 'Construa seu imovel do zero',
       icon: Hammer,
       image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&h=600&fit=crop',
       action: () => navigate('/construcao')
     },
     {
       id: 'simulation',
-      title: 'Simulação de Financiamento',
+      title: 'Simulacao de Financiamento',
       description: 'Calcule suas parcelas',
       icon: Calculator,
       image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&h=600&fit=crop',
