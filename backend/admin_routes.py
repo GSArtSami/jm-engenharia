@@ -15,9 +15,19 @@ router = APIRouter(prefix="/admin", tags=["admin"])
 # Global db variable to be set by server
 db_instance = None
 
-# Upload directory
-UPLOAD_DIR = Path("/app/backend/uploads")
-UPLOAD_DIR.mkdir(exist_ok=True)
+# Upload directory - use relative path and create if not exists
+BASE_DIR = Path(__file__).resolve().parent
+UPLOAD_DIR = BASE_DIR / "uploads"
+
+# Create uploads directory if it doesn't exist
+try:
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+except Exception as e:
+    print(f"Warning: Could not create uploads directory: {e}")
+    # Fallback to temp directory for environments like Render
+    import tempfile
+    UPLOAD_DIR = Path(tempfile.gettempdir()) / "jm_uploads"
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 # Dependency to get database
 def get_db():
