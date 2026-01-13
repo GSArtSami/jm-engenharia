@@ -28,7 +28,7 @@ const Header = () => {
               onClick={() => navigate('/')}
             >
               <Home size={20} />
-              <span>Início</span>
+              <span>Inicio</span>
             </button>
           </div>
 
