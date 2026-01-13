@@ -4,6 +4,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from models import PageVisit, AppointmentCreate, SimulationCreate
 from datetime import datetime
 from pathlib import Path
+from bson import ObjectId
 
 router = APIRouter(tags=["public"])
 
@@ -16,6 +17,74 @@ UPLOAD_DIR = Path("/app/backend/uploads")
 # Dependency to get database
 def get_db():
     return db_instance
+
+# Public properties routes
+@router.get("/properties")
+async def get_public_properties(bedrooms: int = None, db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Get all properties for public viewing, optionally filtered by bedrooms"""
+    query = {}
+    if bedrooms:
+        query["bedrooms"] = bedrooms
+    
+    properties = await db.properties.find(query).to_list(1000)
+    for prop in properties:
+        prop["id"] = str(prop.pop("_id"))
+    return properties
+
+@router.get("/properties/{property_id}")
+async def get_property_by_id(property_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Get a single property by ID"""
+    from fastapi import HTTPException
+    try:
+        prop = await db.properties.find_one({"_id": ObjectId(property_id)})
+        if prop:
+            prop["id"] = str(prop.pop("_id"))
+            return prop
+        raise HTTPException(status_code=404, detail="Imóvel não encontrado")
+    except Exception as e:
+        raise HTTPException(status_code=404, detail="Imóvel não encontrado")
+
+@router.get("/lands")
+async def get_public_lands(db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Get all lands for public viewing"""
+    lands = await db.lands.find().to_list(1000)
+    for land in lands:
+        land["id"] = str(land.pop("_id"))
+    return lands
+
+@router.get("/lands/{land_id}")
+async def get_land_by_id(land_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Get a single land by ID"""
+    from fastapi import HTTPException
+    try:
+        land = await db.lands.find_one({"_id": ObjectId(land_id)})
+        if land:
+            land["id"] = str(land.pop("_id"))
+            return land
+        raise HTTPException(status_code=404, detail="Terreno não encontrado")
+    except Exception as e:
+        raise HTTPException(status_code=404, detail="Terreno não encontrado")
+
+@router.get("/constructions")
+async def get_public_constructions(db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Get all constructions for public viewing"""
+    constructions = await db.constructions.find().to_list(1000)
+    for construction in constructions:
+        construction["id"] = str(construction.pop("_id"))
+    return constructions
+
+@router.get("/constructions/{construction_id}")
+async def get_construction_by_id(construction_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Get a single construction by ID"""
+    from fastapi import HTTPException
+    try:
+        construction = await db.constructions.find_one({"_id": ObjectId(construction_id)})
+        if construction:
+            construction["id"] = str(construction.pop("_id"))
+            return construction
+        raise HTTPException(status_code=404, detail="Construção não encontrada")
+    except Exception as e:
+        raise HTTPException(status_code=404, detail="Construção não encontrada")
 
 @router.post("/track-visit")
 async def track_page_visit(
