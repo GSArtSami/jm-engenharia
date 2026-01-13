@@ -37,6 +37,10 @@ def get_db():
 # Create the main app without a prefix
 app = FastAPI()
 
+# Mount static files for uploads BEFORE adding routes
+# This serves uploaded images at /api/uploads/{filename}
+app.mount("/api/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
+
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
