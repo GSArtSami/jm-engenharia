@@ -10,7 +10,7 @@ import sys
 from datetime import datetime, timedelta
 
 # Backend URL from environment
-BACKEND_URL = "https://casaterra.preview.emergentagent.com/api"
+BACKEND_URL = "https://casa-pronta.preview.emergentagent.com/api"
 
 # Test data in Portuguese
 ADMIN_PASSWORD = "JM@engcivil"
