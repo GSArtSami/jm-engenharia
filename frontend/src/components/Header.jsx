@@ -86,7 +86,7 @@ const Header = () => {
                 }}
               >
                 <Home size={20} />
-                Início
+                Inicio
               </button>
               <button
                 className="px-4 py-3 font-medium text-left transition-colors duration-200 hover:bg-gray-50 rounded-lg"
