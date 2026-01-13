@@ -11,8 +11,8 @@ router = APIRouter(tags=["public"])
 # Global db variable to be set by server
 db_instance = None
 
-# Upload directory
-UPLOAD_DIR = Path("/app/backend/uploads")
+# Upload directory - use relative path from this file's location
+UPLOAD_DIR = Path(__file__).resolve().parent / "uploads"
 
 # Dependency to get database
 def get_db():
