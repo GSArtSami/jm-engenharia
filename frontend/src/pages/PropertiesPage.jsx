@@ -34,7 +34,7 @@ const PropertiesPage = () => {
 
   const fetchProperties = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/admin/properties`);
+      const response = await axios.get(`${BACKEND_URL}/api/properties`);
       setProperties(response.data);
       setFilteredProperties(response.data);
     } catch (error) {
