@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -7,261 +7,219 @@ import SimulationButton from '../components/SimulationButton';
 import WhatsAppButton from '../components/WhatsAppButton';
 import ScheduleMeetingButton from '../components/ScheduleMeetingButton';
 import { Card } from '../components/ui/card';
+import { Search, Home, MapPin, Bed, Image } from 'lucide-react';
 import { Button } from '../components/ui/button';
-import { ArrowLeft, MapPin, Bed, Home, ChevronLeft, ChevronRight, X, Image } from 'lucide-react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-const PropertyDetailPage = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [property, setProperty] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [showGallery, setShowGallery] = useState(false);
+const PropertiesPage = () => {
+  const navigate = useNavigate();
+  const [properties, setProperties] = useState([]);
+  const [filteredProperties, setFilteredProperties] = useState([]);
+  const [selectedBedrooms, setSelectedBedrooms] = useState('all');
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const propertiesPerPage = 12;
 
-  useEffect(() => {
-    fetchProperty();
-  }, [id]);
+  const bedroomOptions = [
+    { id: 'all', name: 'Todos' },
+    { id: '1', name: '1 Quarto' },
+    { id: '2', name: '2 Quartos' },
+    { id: '3', name: '3 Quartos' }
+  ];
 
-  const fetchProperty = async () => {
-    try {
-      const response = await axios.get(`${BACKEND_URL}/api/admin/properties`);
-      const found = response.data.find(p => p.id === id);
-      setProperty(found);
-    } catch (error) {
-      console.error('Error fetching property:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    fetchProperties();
+  }, []);
 
-  const getImageUrl = (url) => {
-    if (!url) return null;
-    return url.startsWith('/api') ? `${BACKEND_URL}${url}` : url;
-  };
+  const fetchProperties = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/admin/properties`);
+      setProperties(response.data);
+      setFilteredProperties(response.data);
+    } catch (error) {
+      console.error('Error fetching properties:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const images = property?.images?.length > 0 
-    ? property.images 
-    : (property?.image ? [property.image] : []);
+  useEffect(() => {
+    let filtered = properties;
 
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % images.length);
-  };
+    if (selectedBedrooms !== 'all') {
+      filtered = filtered.filter(
+        (prop) => prop.bedrooms?.toString() === selectedBedrooms
+      );
+    }
 
-  const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
+    setFilteredProperties(filtered);
+    setCurrentPage(1);
+  }, [selectedBedrooms, properties]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#e0e0e0' }}>
-        <Header />
-        <div className="flex-grow flex items-center justify-center">
-          <p className="text-gray-500">Carregando...</p>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
+  // Pagination
+  const indexOfLastProperty = currentPage * propertiesPerPage;
+  const indexOfFirstProperty = indexOfLastProperty - propertiesPerPage;
+  const currentProperties = filteredProperties.slice(
+    indexOfFirstProperty,
+    indexOfLastProperty
+  );
+  const totalPages = Math.ceil(filteredProperties.length / propertiesPerPage);
 
-  if (!property) {
-    return (
-      <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#e0e0e0' }}>
-        <Header />
-        <div className="flex-grow flex items-center justify-center">
-          <Card className="p-8 text-center bg-white">
-            <p className="text-gray-500 mb-4">Imóvel não encontrado</p>
-            <Button onClick={() => navigate('/imoveis')} variant="outline">
-              Voltar para Imóveis
-            </Button>
-          </Card>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
+  const getImageUrl = (property) => {
+    if (property.images && property.images.length > 0) {
+      const img = property.images[0];
+      return img.startsWith('/api') ? `${BACKEND_URL}${img}` : img;
+    }
+    if (property.image) {
+      return property.image.startsWith('/api') ? `${BACKEND_URL}${property.image}` : property.image;
+    }
+    return null;
+  };
 
-  return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#e0e0e0' }}>
-      <Header />
+  return (
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#e0e0e0' }}>
+      <Header />
 
-      <div className="container mx-auto px-4 py-8 flex-grow">
-        {/* Back Button */}
-        <Button
-          onClick={() => navigate('/imoveis')}
-          variant="outline"
-          className="mb-6 flex items-center gap-2"
-        >
-          <ArrowLeft size={18} />
-          Voltar para Imóveis
-        </Button>
+      {/* Search Section */}
+      <div className="bg-white shadow-sm py-8">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-6 text-center" style={{ color: '#00537C' }}>
+            Casas Prontas
+          </h2>
+          
+          <div className="max-w-2xl mx-auto">
+            <div className="flex flex-col md:flex-row gap-4">
+              {/* Dormitórios */}
+              <div className="flex-1">
+                <label className="block text-sm font-medium mb-2" style={{ color: '#2c3e50' }}>
+                  Número de Dormitórios
+                </label>
+                <select 
+                  value={selectedBedrooms} 
+                  onChange={(e) => setSelectedBedrooms(e.target.value)}
+                  className="w-full h-10 px-3 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {bedroomOptions.map((option) => (
+                    <option key={option.id} value={option.id}>
+                      {option.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Image Gallery */}
-          <div>
-            <Card className="overflow-hidden bg-white">
-              <div className="aspect-video relative bg-gray-100">
-                {images.length > 0 ? (
-                  <>
-                    <img
-                      src={getImageUrl(images[currentImageIndex])}
-                      alt={property.name}
-                      className="w-full h-full object-cover cursor-pointer"
-                      onClick={() => setShowGallery(true)}
-                    />
-                    {images.length > 1 && (
-                      <>
-                        <button
-                          onClick={prevImage}
-                          className="absolute left-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70"
-                        >
-                          <ChevronLeft size={24} />
-                        </button>
-                        <button
-                          onClick={nextImage}
-                          className="absolute right-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70"
-                        >
-                          <ChevronRight size={24} />
-                        </button>
-                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm">
-                          {currentImageIndex + 1} / {images.length}
-                        </div>
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <Image size={64} className="text-gray-300" />
-                  </div>
-                )}
-              </div>
+              <div className="flex items-end">
+                <Button
+                  className="w-full md:w-auto px-8 py-3 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg flex items-center gap-2"
+                  style={{ backgroundColor: '#00537C' }}
+                >
+                  <Search size={20} />
+                  Buscar
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-              {/* Thumbnails */}
-              {images.length > 1 && (
-                <div className="p-4 flex gap-2 overflow-x-auto">
-                  {images.map((img, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentImageIndex(index)}
-                      className={`flex-shrink-0 w-20 h-20 rounded overflow-hidden border-2 ${
-                        index === currentImageIndex ? 'border-blue-500' : 'border-transparent'
-                      }`}
-                    >
-                      <img
-                        src={getImageUrl(img)}
-                        alt={`Foto ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    </button>
-                  ))}
-                </div>
-              )}
-            </Card>
-          </div>
+      {/* Results Section */}
+      <div className="container mx-auto px-4 py-8 flex-grow">
+        <p className="text-gray-600 mb-6">
+          {filteredProperties.length} imóveis encontrados
+        </p>
 
-          {/* Property Info */}
-          <div>
-            <Card className="p-6 bg-white">
-              {property.badge && (
-                <span className="inline-block bg-green-500 text-white text-sm px-3 py-1 rounded mb-4">
-                  {property.badge}
-                </span>
-              )}
-              
-              <h1 className="text-3xl font-bold mb-4" style={{ color: '#00537C' }}>
-                {property.name}
-              </h1>
+        {loading ? (
+          <div className="text-center py-16 text-gray-500">Carregando imóveis...</div>
+        ) : filteredProperties.length === 0 ? (
+          <Card className="p-12 text-center bg-white">
+            <Home size={48} className="mx-auto text-gray-300 mb-4" />
+            <p className="text-gray-500 text-lg mb-2">Nenhum imóvel disponível no momento</p>
+            <p className="text-gray-400">Entre em contato conosco para mais informações.</p>
+          </Card>
+        ) : (
+          <>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {currentProperties.map((property) => (
+                <Card 
+                  key={property.id} 
+                  className="bg-white overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => navigate(`/imoveis/${property.id}`)}
+                >
+                  <div className="aspect-video bg-gray-100 relative">
+                    {getImageUrl(property) ? (
+                      <img
+                        src={getImageUrl(property)}
+                        alt={property.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Image size={48} className="text-gray-300" />
+                      </div>
+                    )}
+                    {property.badge && (
+                      <span className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
+                        {property.badge}
+                      </span>
+                    )}
+                    {property.images && property.images.length > 1 && (
+                      <span className="absolute bottom-2 right-2 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded">
+                        +{property.images.length - 1} fotos
+                      </span>
+                    )}
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-bold text-lg mb-1" style={{ color: '#00537C' }}>
+                      {property.name}
+                    </h3>
+                    <div className="flex items-center gap-1 text-gray-500 text-sm mb-2">
+                      <MapPin size={14} />
+                      {property.location}
+                    </div>
+                    <div className="flex items-center gap-1 text-gray-500 text-sm mb-3">
+                      <Bed size={14} />
+                      {property.bedrooms} {property.bedrooms === 1 ? 'quarto' : 'quartos'}
+                    </div>
+                    <p className="font-bold text-xl" style={{ color: '#00537C' }}>
+                      {property.propertyValue}
+                    </p>
+                  </div>
+                </Card>
+              ))}
+            </div>
 
-              <div className="flex items-center gap-2 text-gray-600 mb-2">
-                <MapPin size={18} />
-                <span>{property.location}</span>
-              </div>
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex justify-center gap-2 mt-8">
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                >
+                  Anterior
+                </Button>
+                <span className="flex items-center px-4 text-gray-600">
+                  Página {currentPage} de {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                >
+                  Próxima
+                </Button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
 
-              <div className="flex items-center gap-2 text-gray-600 mb-6">
-                <Bed size={18} />
-                <span>{property.bedrooms} {property.bedrooms === 1 ? 'quarto' : 'quartos'}</span>
-              </div>
-
-              {property.description && (
-                <div className="mb-6">
-                  <h3 className="font-bold text-lg mb-2" style={{ color: '#00537C' }}>
-                    Descrição
-                  </h3>
-                  <p className="text-gray-600">{property.description}</p>
-                </div>
-              )}
-
-              <div className="border-t pt-6">
-                <p className="text-gray-500 text-sm mb-1">Valor</p>
-                <p className="text-4xl font-bold" style={{ color: '#00537C' }}>
-                  {property.propertyValue}
-                </p>
-              </div>
-
-              <div className="mt-6 space-y-3">
-                <Button
-                  onClick={() => navigate('/simulacao')}
-                  className="w-full py-6 text-white font-medium text-lg"
-                  style={{ backgroundColor: '#00537C' }}
-                >
-                  Simular Financiamento
-                </Button>
-                <Button
-                  onClick={() => navigate('/agendar')}
-                  variant="outline"
-                  className="w-full py-6 font-medium text-lg"
-                >
-                  Agendar Visita
-                </Button>
-              </div>
-            </Card>
-          </div>
-        </div>
-      </div>
-
-      {/* Full Screen Gallery Modal */}
-      {showGallery && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
-          <button
-            onClick={() => setShowGallery(false)}
-            className="absolute top-4 right-4 text-white p-2 hover:bg-white hover:bg-opacity-20 rounded-full"
-          >
-            <X size={32} />
-          </button>
-          
-          <button
-            onClick={prevImage}
-            className="absolute left-4 text-white p-2 hover:bg-white hover:bg-opacity-20 rounded-full"
-          >
-            <ChevronLeft size={40} />
-          </button>
-          
-          <img
-            src={getImageUrl(images[currentImageIndex])}
-            alt={property.name}
-            className="max-h-[90vh] max-w-[90vw] object-contain"
-          />
-          
-          <button
-            onClick={nextImage}
-            className="absolute right-4 text-white p-2 hover:bg-white hover:bg-opacity-20 rounded-full"
-          >
-            <ChevronRight size={40} />
-          </button>
-          
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-lg">
-            {currentImageIndex + 1} / {images.length}
-          </div>
-        </div>
-      )}
-
-      <Footer />
-      <SimulationButton />
-      <WhatsAppButton />
-      <ScheduleMeetingButton />
-    </div>
-  );
+      <Footer />
+      <SimulationButton />
+      <WhatsAppButton />
+      <ScheduleMeetingButton />
+    </div>
+  );
 };
 
-export default PropertyDetailPage;
+export default PropertiesPage;
