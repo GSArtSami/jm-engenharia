@@ -10,7 +10,7 @@ from typing import List
 import uuid
 from datetime import datetime, timezone
 
-# ... seus imports existentes ...
+const BACKEND_URL = "https://jm-engenharia-api.onrender.com";
 
 # 1. Defina o caminho de forma dinâmica
 BASE_DIR = Path(__file__).resolve().parent
