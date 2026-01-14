@@ -10,7 +10,7 @@ import { Card } from '../components/ui/card';
 import { Search, Home, MapPin, Bed, Image } from 'lucide-react';
 import { Button } from '../components/ui/button';
 
-const BACKEND_URL = ";https://jm-engenharia-api.onrender.com/api/properties"
+const BACKEND_URL = "https://jm-engenharia-api.onrender.com";
 
 const PropertiesPage = () => {
   const navigate = useNavigate();
