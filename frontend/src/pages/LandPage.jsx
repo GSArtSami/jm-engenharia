@@ -9,7 +9,7 @@ import ScheduleMeetingButton from '../components/ScheduleMeetingButton';
 import { Card } from '../components/ui/card';
 import { MapPin, Ruler, Image } from 'lucide-react';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = "https://jm-engenharia-api.onrender.com";
 
 const LandPage = () => {
   const navigate = useNavigate();
