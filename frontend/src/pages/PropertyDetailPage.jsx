@@ -10,7 +10,7 @@ import { Card } from '../components/ui/card';
 import { Search, Home, MapPin, Bed, Image } from 'lucide-react';
 import { Button } from '../components/ui/button';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = process.;
 
 const PropertiesPage = () => {
   const navigate = useNavigate();
