@@ -7,13 +7,12 @@ import logging
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
 from typing import List
-import uuid
-from datetime import datetime, timezone
+
 
 const BACKEND_URL = "https://jm-engenharia-api.onrender.com";
 
-# 1. Defina o caminho de forma dinâmica
-BASE_DIR = Path(__file__).resolve().parent
+
+
 UPLOAD_DIR = BASE_DIR / "uploads"
 
 # 2. Crie a pasta automaticamente se ela não existir
