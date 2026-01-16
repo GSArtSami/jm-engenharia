@@ -34,8 +34,8 @@ def get_db():
     return db_instance
 
 # Admin password
-ADMIN_PASSWORD = "JM@engcivil"
-SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "JM@engcivil")
+SECRET_KEY = os.getenv("SECRET_KEY", "JM@Eengcivil")
 
 def create_token():
     payload = {
