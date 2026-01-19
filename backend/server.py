@@ -89,6 +89,14 @@ async def get_status_checks():
 import admin_routes
 import public_routes
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://jm-engenharia.onrender.com", "http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Set the database instance for the routers
 admin_routes.db_instance = db
 public_routes.db_instance = db
@@ -98,13 +106,6 @@ api_router.include_router(admin_routes.router)
 api_router.include_router(public_routes.router)
 app.include_router(api_router)
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # Configure logging
 logging.basicConfig(
