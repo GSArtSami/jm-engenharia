@@ -8,7 +8,7 @@ import { Lock } from 'lucide-react';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = 'https://jm-engenharia-api.onrender.com';
+const API = 'https://jm-engenharia-api.onrender.com/api';
 
 const AdminLogin = () => {
   const [password, setPassword] = useState('');
