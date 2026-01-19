@@ -85,20 +85,19 @@ class Appointment(BaseModel):
     name: str
     email: str
     phone: str
-    preferred_date: str
-    preferred_time: str
+    date: str  # Mudei aqui
+    time: str  # Mudei aqui
     message: Optional[str] = None
-    status: str = "pending"  # pending, confirmed, cancelled
+    status: str = "pending"
     created_at: datetime = Field(default_factory=datetime.utcnow)
-
+    
 class AppointmentCreate(BaseModel):
     name: str
     email: str
     phone: str
-    preferred_date: str
-    preferred_time: str
+    date: str  # Mudei de preferred_date para date
+    time: str  # Mudei de preferred_time para time
     message: Optional[str] = None
-
 # Simulation models
 class SimulationResult(BaseModel):
     id: Optional[str] = None
