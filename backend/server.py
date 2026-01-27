@@ -7,15 +7,13 @@ import admin_routes
 import public_routes
 
 app = FastAPI()
+admin_routes.db_instance = db
+public_routes.db_instance = db
 
-# 1. CORS - PRECISA VIR ANTES DE TUDO
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"], # Libera geral para testar
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Tente adicionar um teste de vida simples fora do prefixo /api para testar o CORS
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
 
 # 2. CONEXÃO MONGODB COM TRATAMENTO DE ERRO
 try:
