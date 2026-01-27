@@ -86,13 +86,14 @@ const AppointmentPage = () => {
     try {
       const dateStr = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}-${String(selectedDate).padStart(2, '0')}`;
       
+      // AJUSTE AQUI: Os nomes das chaves devem ser 'date' e 'time'
       await axios.post(`${API}/appointments`, {
-        name,
-        email,
-        phone,
-        preferred_date: dateStr,
-        preferred_time: selectedTime,
-        message
+        name: name,
+        email: email,
+        phone: phone,
+        date: dateStr,      // Antes era preferred_date
+        time: selectedTime,  // Antes era preferred_time
+        message: message
       });
 
       setSuccess(true);
@@ -100,6 +101,7 @@ const AppointmentPage = () => {
         navigate('/');
       }, 3000);
     } catch (error) {
+      console.error("Erro detalhado:", error.response?.data);
       alert('Erro ao agendar reunião. Tente novamente.');
     } finally {
       setLoading(false);
