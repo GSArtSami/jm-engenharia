@@ -13,7 +13,7 @@ import { Calendar, X, Check } from 'lucide-react';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+const API = "https://jm-engenharia-api.onrender.com/api";
 
 const AppointmentPage = () => {
   const navigate = useNavigate();
@@ -87,15 +87,14 @@ const AppointmentPage = () => {
       const dateStr = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}-${String(selectedDate).padStart(2, '0')}`;
       
       // AJUSTE AQUI: Os nomes das chaves devem ser 'date' e 'time'
-      await axios.post(`${API}/appointments`, {
-        name: name,
-        email: email,
-        phone: phone,
-        date: dateStr,      // Antes era preferred_date
-        time: selectedTime,  // Antes era preferred_time
-        message: message
-      });
-
+   await axios.post(`${API}/appointments`, {
+  name,        // Envia a variável 'name' para o campo 'name' no Python
+  email,       // Envia 'email' para 'email'
+  phone,       // Envia 'phone' para 'phone'
+  date: dateStr,      // ✅ MUDOU AQUI: era preferred_date
+  time: selectedTime,  // ✅ MUDOU AQUI: era preferred_time
+  message      // Envia 'message' para 'message'
+});
       setSuccess(true);
       setTimeout(() => {
         navigate('/');
