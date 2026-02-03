@@ -5,7 +5,8 @@ from typing import List, Dict
 import os
 import jwt
 import uuid
-import shutil
+import cloudinary  # Acrescentado
+import cloudinary.uploader  # Acrescentado
 from datetime import datetime, timedelta
 from bson import ObjectId
 from pathlib import Path
@@ -15,19 +16,7 @@ router = APIRouter(prefix="/admin", tags=["admin"])
 # Global db variable to be set by server
 db_instance = None
 
-# Upload directory - use relative path and create if not exists
-BASE_DIR = Path(__file__).resolve().parent
-UPLOAD_DIR = BASE_DIR / "uploads"
-
-# Create uploads directory if it doesn't exist
-try:
-    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-except Exception as e:
-    print(f"Warning: Could not create uploads directory: {e}")
-    # Fallback to temp directory for environments like Render
-    import tempfile
-    UPLOAD_DIR = Path(tempfile.gettempdir()) / "jm_uploads"
-    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+# O Cloudinary configurará automaticamente através da variável CLOUDINARY_URL no Render
 
 # Dependency to get database
 def get_db():
@@ -59,36 +48,28 @@ async def admin_login(login: AdminLogin):
         return {"success": True, "token": token}
     raise HTTPException(status_code=401, detail="Senha incorreta")
 
-# File upload endpoint
+# --- ROTA DE UPLOAD MODIFICADA PARA CLOUDINARY ---
 @router.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
-    """Upload a single image file"""
-    # Validate file type
+    """Upload a single image file to Cloudinary"""
     allowed_types = ["image/jpeg", "image/png", "image/webp", "image/gif"]
     if file.content_type not in allowed_types:
-        raise HTTPException(status_code=400, detail="Tipo de arquivo não permitido. Use JPG, PNG, WebP ou GIF.")
+        raise HTTPException(status_code=400, detail="Tipo de arquivo não permitido.")
     
-    # Check file size (5MB max)
-    file.file.seek(0, 2)  # Seek to end
-    file_size = file.file.tell()
-    file.file.seek(0)  # Seek back to start
-    
-    if file_size > 5 * 1024 * 1024:  # 5MB
-        raise HTTPException(status_code=400, detail="Arquivo muito grande. Máximo 5MB.")
-    
-    # Generate unique filename
-    ext = file.filename.split(".")[-1] if "." in file.filename else "jpg"
-    filename = f"{uuid.uuid4()}.{ext}"
-    filepath = UPLOAD_DIR / filename
-    
-    # Save file
-    with open(filepath, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-    
-    # Return the URL path
-    return {"success": True, "url": f"/api/uploads/{filename}"}
+    try:
+        # Enviando diretamente para a nuvem
+        upload_result = cloudinary.uploader.upload(
+            file.file,
+            folder="jm_engenharia"
+        )
+        # Retorna a URL segura gerada pelo Cloudinary
+        return {"success": True, "url": upload_result["secure_url"]}
+    except Exception as e:
+        print(f"Erro no Cloudinary: {e}")
+        raise HTTPException(status_code=500, detail="Erro no upload para nuvem")
 
-# Property routes
+# --- TODAS AS SUAS ROTAS ORIGINAIS MANTIDAS ABAIXO ---
+
 @router.get("/properties")
 async def get_all_properties(db: AsyncIOMotorDatabase = Depends(get_db)):
     properties = await db.properties.find().to_list(1000)
@@ -101,10 +82,8 @@ async def create_property(property: PropertyCreate, db: AsyncIOMotorDatabase = D
     property_dict = property.model_dump()
     property_dict["created_at"] = datetime.utcnow()
     result = await db.properties.insert_one(property_dict)
-    # Remove _id and add string id
     property_dict.pop("_id", None)
     property_dict["id"] = str(result.inserted_id)
-    # Convert datetime to ISO string for JSON serialization
     property_dict["created_at"] = property_dict["created_at"].isoformat()
     return {"success": True, "property": property_dict}
 
@@ -125,7 +104,6 @@ async def delete_property(property_id: str, db: AsyncIOMotorDatabase = Depends(g
         return {"success": True}
     raise HTTPException(status_code=404, detail="Imóvel não encontrado")
 
-# Land routes
 @router.get("/lands")
 async def get_all_lands(db: AsyncIOMotorDatabase = Depends(get_db)):
     lands = await db.lands.find().to_list(1000)
@@ -138,10 +116,8 @@ async def create_land(land: LandCreate, db: AsyncIOMotorDatabase = Depends(get_d
     land_dict = land.model_dump()
     land_dict["created_at"] = datetime.utcnow()
     result = await db.lands.insert_one(land_dict)
-    # Remove _id and add string id
     land_dict.pop("_id", None)
     land_dict["id"] = str(result.inserted_id)
-    # Convert datetime to ISO string for JSON serialization
     land_dict["created_at"] = land_dict["created_at"].isoformat()
     return {"success": True, "land": land_dict}
 
@@ -162,7 +138,6 @@ async def delete_land(land_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
         return {"success": True}
     raise HTTPException(status_code=404, detail="Terreno não encontrado")
 
-# Construction routes
 @router.get("/constructions")
 async def get_all_constructions(db: AsyncIOMotorDatabase = Depends(get_db)):
     constructions = await db.constructions.find().to_list(1000)
@@ -175,10 +150,8 @@ async def create_construction(construction: ConstructionCreate, db: AsyncIOMotor
     construction_dict = construction.model_dump()
     construction_dict["created_at"] = datetime.utcnow()
     result = await db.constructions.insert_one(construction_dict)
-    # Remove _id and add string id
     construction_dict.pop("_id", None)
     construction_dict["id"] = str(result.inserted_id)
-    # Convert datetime to ISO string for JSON serialization
     construction_dict["created_at"] = construction_dict["created_at"].isoformat()
     return {"success": True, "construction": construction_dict}
 
@@ -199,23 +172,17 @@ async def delete_construction(construction_id: str, db: AsyncIOMotorDatabase = D
         return {"success": True}
     raise HTTPException(status_code=404, detail="Construção não encontrada")
 
-
-# Analytics routes
 @router.get("/analytics/visits")
 async def get_visit_analytics(period: str = "day", db: AsyncIOMotorDatabase = Depends(get_db)):
-    """Get visit analytics grouped by day, week, or month"""
-    from datetime import datetime, timedelta
-    
     now = datetime.utcnow()
-    
     if period == "day":
-        start_date = now - timedelta(days=30)  # Last 30 days
+        start_date = now - timedelta(days=30)
         group_format = "%Y-%m-%d"
     elif period == "week":
-        start_date = now - timedelta(weeks=12)  # Last 12 weeks
+        start_date = now - timedelta(weeks=12)
         group_format = "%Y-W%U"
     elif period == "month":
-        start_date = now - timedelta(days=365)  # Last 12 months
+        start_date = now - timedelta(days=365)
         group_format = "%Y-%m"
     else:
         start_date = now - timedelta(days=30)
@@ -225,9 +192,7 @@ async def get_visit_analytics(period: str = "day", db: AsyncIOMotorDatabase = De
         {"$match": {"timestamp": {"$gte": start_date}}},
         {
             "$group": {
-                "_id": {
-                    "$dateToString": {"format": group_format, "date": "$timestamp"}
-                },
+                "_id": {"$dateToString": {"format": group_format, "date": "$timestamp"}},
                 "count": {"$sum": 1},
                 "unique_ips": {"$addToSet": "$user_ip"}
             }
@@ -241,35 +206,20 @@ async def get_visit_analytics(period: str = "day", db: AsyncIOMotorDatabase = De
         },
         {"$sort": {"date": 1}}
     ]
-    
     results = await db.page_visits.aggregate(pipeline).to_list(1000)
     return results
 
 @router.get("/analytics/summary")
 async def get_analytics_summary(db: AsyncIOMotorDatabase = Depends(get_db)):
-    """Get overall analytics summary"""
-    from datetime import datetime, timedelta
-    
     now = datetime.utcnow()
     today_start = datetime(now.year, now.month, now.day)
     week_start = now - timedelta(days=7)
     month_start = now - timedelta(days=30)
-    
-    # Today's visits
     today_visits = await db.page_visits.count_documents({"timestamp": {"$gte": today_start}})
-    
-    # This week's visits
     week_visits = await db.page_visits.count_documents({"timestamp": {"$gte": week_start}})
-    
-    # This month's visits
     month_visits = await db.page_visits.count_documents({"timestamp": {"$gte": month_start}})
-    
-    # Total visits
     total_visits = await db.page_visits.count_documents({})
-    
-    # Unique visitors today
     today_visitors = await db.page_visits.distinct("user_ip", {"timestamp": {"$gte": today_start}})
-    
     return {
         "today": today_visits,
         "this_week": week_visits,
@@ -278,14 +228,11 @@ async def get_analytics_summary(db: AsyncIOMotorDatabase = Depends(get_db)):
         "unique_today": len(today_visitors)
     }
 
-# Appointment routes
 @router.get("/appointments")
 async def get_all_appointments(status: str = None, db: AsyncIOMotorDatabase = Depends(get_db)):
-    """Get all appointments, optionally filtered by status"""
     query = {}
     if status:
         query["status"] = status
-    
     appointments = await db.appointments.find(query).sort("created_at", -1).to_list(1000)
     for appt in appointments:
         appt["id"] = str(appt.pop("_id"))
@@ -293,7 +240,6 @@ async def get_all_appointments(status: str = None, db: AsyncIOMotorDatabase = De
 
 @router.get("/appointments/pending/count")
 async def get_pending_appointments_count(db: AsyncIOMotorDatabase = Depends(get_db)):
-    """Get count of pending appointments for notifications"""
     count = await db.appointments.count_documents({"status": "pending"})
     return {"count": count}
 
@@ -303,45 +249,31 @@ async def update_appointment_status(
     status: str = Body(..., embed=True),
     db: AsyncIOMotorDatabase = Depends(get_db)
 ):
-    """Update appointment status (confirm, cancel, etc.)"""
     if status not in ["pending", "confirmed", "cancelled"]:
         raise HTTPException(status_code=400, detail="Status inválido")
-    
     result = await db.appointments.update_one(
         {"_id": ObjectId(appointment_id)},
         {"$set": {"status": status}}
     )
-    
     if result.modified_count:
         return {"success": True}
     raise HTTPException(status_code=404, detail="Agendamento não encontrado")
 
-
-
-# Unavailable dates routes
 @router.get("/unavailable-dates")
 async def get_unavailable_dates(db: AsyncIOMotorDatabase = Depends(get_db)):
-    """Get all unavailable dates"""
     dates = await db.unavailable_dates.find({}, {"_id": 0}).to_list(1000)
     return dates
 
 @router.post("/unavailable-dates")
 async def add_unavailable_date(date: str = Body(..., embed=True), db: AsyncIOMotorDatabase = Depends(get_db)):
-    """Mark a date as unavailable"""
-    # Check if date already exists
     existing = await db.unavailable_dates.find_one({"date": date})
     if existing:
         raise HTTPException(status_code=400, detail="Data já está marcada como indisponível")
-    
     await db.unavailable_dates.insert_one({"date": date})
     return {"success": True, "date": date}
 
-
-
-# Simulations routes
 @router.get("/simulations")
 async def get_all_simulations(db: AsyncIOMotorDatabase = Depends(get_db)):
-    """Get all saved simulations"""
     simulations = await db.simulations.find().sort("created_at", -1).to_list(1000)
     for sim in simulations:
         sim["id"] = str(sim.pop("_id"))
@@ -351,7 +283,6 @@ async def get_all_simulations(db: AsyncIOMotorDatabase = Depends(get_db)):
 
 @router.delete("/simulations/{simulation_id}")
 async def delete_simulation(simulation_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
-    """Delete a saved simulation"""
     result = await db.simulations.delete_one({"_id": ObjectId(simulation_id)})
     if result.deleted_count:
         return {"success": True}
@@ -359,7 +290,6 @@ async def delete_simulation(simulation_id: str, db: AsyncIOMotorDatabase = Depen
 
 @router.delete("/unavailable-dates/{date}")
 async def remove_unavailable_date(date: str, db: AsyncIOMotorDatabase = Depends(get_db)):
-    """Remove a date from unavailable list"""
     result = await db.unavailable_dates.delete_one({"date": date})
     if result.deleted_count:
         return {"success": True}
@@ -367,7 +297,6 @@ async def remove_unavailable_date(date: str, db: AsyncIOMotorDatabase = Depends(
 
 @router.delete("/appointments/{appointment_id}")
 async def delete_appointment(appointment_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
-    """Delete an appointment"""
     result = await db.appointments.delete_one({"_id": ObjectId(appointment_id)})
     if result.deleted_count:
         return {"success": True}
