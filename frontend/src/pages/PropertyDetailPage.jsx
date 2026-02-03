@@ -57,13 +57,62 @@ const PropertyDetailPage = () => {
               {property.price?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
             </p>
             
-            <button className="w-full bg-blue-900 text-white py-3 rounded-lg font-bold">
-              Agendar Visita
-            </button>
+
+
+             <div className="mt-6 space-y-3">
+                <Button
+                  onClick={() => navigate('/agendar')}
+                  className="w-full py-6 text-white font-medium text-lg"
+                  style={{ backgroundColor: '#00537C' }}
+                >
+                  Agendar Visita
+                </Button>
+              </div>
+            </Card>
           </div>
         </div>
-      </main>
+      </div>
+
+      {/* Full Screen Gallery Modal */}
+      {showGallery && (
+        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
+          <button
+            onClick={() => setShowGallery(false)}
+            className="absolute top-4 right-4 text-white p-2 hover:bg-white hover:bg-opacity-20 rounded-full"
+          >
+            <X size={32} />
+          </button>
+          
+          <button
+            onClick={prevImage}
+            className="absolute left-4 text-white p-2 hover:bg-white hover:bg-opacity-20 rounded-full"
+          >
+            <ChevronLeft size={40} />
+          </button>
+          
+          <img
+            src={getImageUrl(images[currentImageIndex])}
+            alt={land.name}
+            className="max-h-[90vh] max-w-[90vw] object-contain"
+          />
+          
+          <button
+            onClick={nextImage}
+            className="absolute right-4 text-white p-2 hover:bg-white hover:bg-opacity-20 rounded-full"
+          >
+            <ChevronRight size={40} />
+          </button>
+          
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-lg">
+            {currentImageIndex + 1} / {images.length}
+          </div>
+        </div>
+      )}
+
       <Footer />
+      <SimulationButton />
+      <WhatsAppButton />
+      <ScheduleMeetingButton />
     </div>
   );
 };
