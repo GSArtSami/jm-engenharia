@@ -629,13 +629,7 @@ const SimulationPage = () => {
 
                   <div className="border-t pt-4 mt-4">
                     <p className="text-sm text-gray-600">
-                      * Esta é uma simulação. Os valores podem variar de acordo com a análise de crédito e condições do financiamento.
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      * SAC (Sistema de Amortização Constante): parcelas decrescentes ao longo do tempo.
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      * PRICE: parcelas fixas durante todo o período.
+                      *Esta é uma estimativa de valores. Para um orçamento exato, entre em contato conosco
                     </p>
                   </div>
                   </>
