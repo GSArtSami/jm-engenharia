@@ -5,7 +5,6 @@ import { X, ChevronLeft, ChevronRight, MapPin, Bed, Home } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
-// Se você não tiver um componente Button/Card pronto, use tags HTML normais ou ajuste os imports
 const BACKEND_URL = "https://jm-engenharia-api.onrender.com";
 
 const PropertyDetailPage = () => {
@@ -14,7 +13,6 @@ const PropertyDetailPage = () => {
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
   
-  // Estados para a Galeria
   const [showGallery, setShowGallery] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -32,7 +30,15 @@ const PropertyDetailPage = () => {
     fetchProperty();
   }, [id]);
 
-  // Funções da Galeria
+  // FUNÇÃO AUXILIAR PARA TRATAR A URL DA IMAGEM
+  const getImageUrl = (img) => {
+    if (!img) return '';
+    // Se for um link completo (Cloudinary), retorna direto
+    if (img.startsWith('http')) return img;
+    // Se for apenas o nome do arquivo (Antigo), anexa o BACKEND_URL
+    return `${BACKEND_URL}/api/uploads/${img}`;
+  };
+
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % property.images.length);
   };
@@ -60,7 +66,7 @@ const PropertyDetailPage = () => {
           >
             {images.length > 0 ? (
               <img 
-                src={images[0].startsWith('http') ? images[0] : `${BACKEND_URL}${images[0]}`} 
+                src={getImageUrl(images[0])} // USANDO A FUNÇÃO AUXILIAR
                 alt={property.title} 
                 className="w-full h-[400px] object-cover hover:scale-105 transition-transform duration-300"
               />
@@ -120,23 +126,17 @@ const PropertyDetailPage = () => {
             <X size={32} />
           </button>
           
-          <button
-            onClick={prevImage}
-            className="absolute left-4 text-white p-3 hover:bg-white/20 rounded-full transition-colors"
-          >
+          <button onClick={prevImage} className="absolute left-4 text-white p-3 hover:bg-white/20 rounded-full transition-colors">
             <ChevronLeft size={48} />
           </button>
           
           <img
-            src={images[currentImageIndex].startsWith('http') ? images[currentImageIndex] : `${BACKEND_URL}${images[currentImageIndex]}`}
+            src={getImageUrl(images[currentImageIndex])} // USANDO A FUNÇÃO AUXILIAR
             alt={`${property.title} - ${currentImageIndex + 1}`}
             className="max-h-[85vh] max-w-[90vw] object-contain shadow-2xl"
           />
           
-          <button
-            onClick={nextImage}
-            className="absolute right-4 text-white p-3 hover:bg-white/20 rounded-full transition-colors"
-          >
+          <button onClick={nextImage} className="absolute right-4 text-white p-3 hover:bg-white/20 rounded-full transition-colors">
             <ChevronRight size={48} />
           </button>
           
